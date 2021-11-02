@@ -11,18 +11,20 @@ import { ColorSchemeName } from 'react-native';
 import ModalScreen from '../screens/ModalScreen';
 import MainScreen from '../screens/MainScreen';
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer
+            linking={LinkingConfiguration}
+            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+        >
+            <RootNavigator />
+        </NavigationContainer>
+    );
 }
 
 /**
@@ -30,16 +32,25 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const isLoggedIn: boolean = false;
 
 function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Root" component={MainScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
+    return (
+        <Stack.Navigator>
+            {!isLoggedIn ? (
+                <Stack.Group>
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <Stack.Screen name="Register" component={RegisterScreen} />
+                </Stack.Group>
+            ) : (
+                <Stack.Group>
+                    <Stack.Screen name="Root" component={MainScreen} />
+                </Stack.Group>
+            )}
+            <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+            <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                <Stack.Screen name="Modal" component={ModalScreen} />
+            </Stack.Group>
+        </Stack.Navigator>
   );
 }
