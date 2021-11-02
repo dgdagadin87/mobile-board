@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import { ColorSchemeName } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
@@ -7,12 +8,13 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 
 export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+  const isLoadingComplete: boolean = useCachedResources();
+  const colorScheme: ColorSchemeName = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;
-  } else {
+  }
+  else {
     return (
       <SafeAreaProvider>
         <Navigation colorScheme={colorScheme} />
