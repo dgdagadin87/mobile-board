@@ -9,6 +9,7 @@ import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 
 import ModalScreen from '../screens/ModalScreen';
+import MainScreen from '../screens/MainScreen';
 import LoginScreen from '../screens/LoginScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
@@ -33,7 +34,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={LoginScreen} />
+      <Stack.Screen name="Root" component={MainScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
