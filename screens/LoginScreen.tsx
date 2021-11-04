@@ -16,21 +16,34 @@ class LoginScreen extends React.Component<Props> {
     this.props.actions.changeLogin(text);
   }
 
+  changePassword(text: string) {
+    this.props.actions.changePassword(text);
+  }
+
   render() {
     const { login, password } = this.props;
+
     return (
       <SafeAreaView style={styles.container}>
         <Text>Введите почту</Text>
         <View>
           <TextInput
-            editable={true}
             style={styles.input}
             onChangeText={(text: string) => this.changeLogin(text)}
             value={login}
+            placeholder="Она будет служить логином для входа в приложение"
           />
         </View>
-        <Text></Text>
-        <View></View>
+        <Text>Введите пароль</Text>
+        <View>
+          <TextInput
+            secureTextEntry={true}
+            style={styles.input}
+            onChangeText={(text: string) => this.changePassword(text)}
+            value={password}
+            placeholder="По нему вас будут узнавать телезрители"
+          />
+        </View>
       </SafeAreaView>
     );
   }
