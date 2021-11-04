@@ -1,0 +1,2 @@
+export const LOGIN_CHANGE = 'LOGIN_CHANGE';
+export const PASSWORD_CHANGE = 'PASSWORD_CHANGE';
