@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, Button, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Button,
+  TextInput,
+  ImageBackground,
+  Image, Dimensions, TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { bindActionCreators } from 'redux';
@@ -20,22 +26,32 @@ class LoginScreen extends React.Component<Props> {
     this.props.actions.changePassword(text);
   }
 
+  onLogin() {
+    console.log('Login')
+  }
+
   render() {
     const { login, password } = this.props;
+    const image: any = { uri: "../assets/auth_bg.png" };
 
     return (
-      <SafeAreaView style={styles.container}>
-        <Text>Введите почту</Text>
-        <View>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../assets/images/auth_bg.png')}
+          resizeMode="cover"
+          style={styles.image}
+        >
+        <Image
+          style={styles.logo}
+          source={require('../assets/images/logo.svg')} />
+          <Text style={styles.label}>Введите почту</Text>
           <TextInput
             style={styles.input}
             onChangeText={(text: string) => this.changeLogin(text)}
             value={login}
-            placeholder="Она будет служить логином для входа в приложение"
+            placeholder="Она будет служить логином для входа"
           />
-        </View>
-        <Text>Введите пароль</Text>
-        <View>
+          <Text onPress={this.onLogin} style={styles.label}>Введите пароль</Text>
           <TextInput
             secureTextEntry={true}
             style={styles.input}
@@ -43,8 +59,15 @@ class LoginScreen extends React.Component<Props> {
             value={password}
             placeholder="По нему вас будут узнавать телезрители"
           />
-        </View>
-      </SafeAreaView>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.button}
+            onPress={this.onLogin}
+          >
+              <Text style={styles.text}>Войти</Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      </View>
     );
   }
 };
@@ -67,21 +90,52 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  label: {
+    marginLeft: '15%',
+    color: '#333',
+    fontSize: 14
   },
-  link: {
+  input: {
+    width: '70%',
+    backgroundColor: '#fff',
+    padding: 7,
+    marginLeft: '15%',
+    marginBottom: 10,
+    marginTop: 5,
+    fontSize: 12,
+    border: '1px solid #999'
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+    width: '100%',
+    height: '100%'
+  },
+  logo: {
+    position: 'absolute',
+    top: '5%',
+    left: '29%',
+    width: '42%',
+    height: Dimensions.get('window').width * .3,
+    resizeMode: 'stretch'
+  },
+  button: {
+    flexDirection: 'row', 
+    height: 40, 
+    backgroundColor: '#0099cc',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 15,
-    paddingVertical: 15,
+    elevation:3,
+    width: '70%',
+    marginLeft: '15%'
   },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-  input: {}
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff'
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
