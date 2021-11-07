@@ -1,4 +1,4 @@
-import { LOGIN_CHANGE, PASSWORD_CHANGE } from '../constants';
+import { LOGIN_LOGIN_CHANGE, LOGIN_PASSWORD_CHANGE } from '../constants';
 
 const initialState = {
     login: '',
@@ -7,13 +7,13 @@ const initialState = {
 
 const loginReducer = (state = initialState, action: any) => {
     switch(action.type) {
-        case LOGIN_CHANGE:
+        case LOGIN_LOGIN_CHANGE:
             return {
                 ...state,
                 login: action.payload
             };
 
-        case PASSWORD_CHANGE:
+        case LOGIN_PASSWORD_CHANGE:
             return {
                 ...state,
                 password: action.payload

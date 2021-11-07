@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Button,
   TextInput,
   ImageBackground,
-  Image, Dimensions, TouchableOpacity
+  Image,
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { changeLogin, changePassword } from '../redux/actions/login';
@@ -15,6 +16,7 @@ type Props = {
   login: string,
   password: string,
   actions: any,
+  navigation: any,
 };
 
 class LoginScreen extends React.Component<Props> {
@@ -30,9 +32,12 @@ class LoginScreen extends React.Component<Props> {
     console.log('Login')
   }
 
+  register(): void {
+    this.props.navigation.navigate('Register');
+  }
+
   render() {
     const { login, password } = this.props;
-    const image: any = { uri: "../assets/auth_bg.png" };
 
     return (
       <View style={styles.container}>
@@ -41,9 +46,10 @@ class LoginScreen extends React.Component<Props> {
           resizeMode="cover"
           style={styles.image}
         >
-        <Image
-          style={styles.logo}
-          source={require('../assets/images/logo.svg')} />
+          <Image
+            style={styles.logo}
+            source={require('../assets/images/logo.svg')}
+          />
           <Text style={styles.label}>Введите почту</Text>
           <TextInput
             style={styles.input}
@@ -71,7 +77,7 @@ class LoginScreen extends React.Component<Props> {
 
           <View style={styles.bottom}>
             <View style={styles.haveNoAccount}>
-              <Text style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
+              <Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
             </View>
             <View style={styles.userAgreement}>
               <Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
@@ -171,7 +177,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     position: 'absolute',
-    top: '5%',
+    top: '3%',
     left: '29%',
     width: '42%',
     height: Dimensions.get('window').width * .3,
