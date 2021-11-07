@@ -51,7 +51,7 @@ class LoginScreen extends React.Component<Props> {
             value={login}
             placeholder="Она будет служить логином для входа"
           />
-          <Text onPress={this.onLogin} style={styles.label}>Введите пароль</Text>
+          <Text style={styles.label}>Введите пароль</Text>
           <TextInput
             secureTextEntry={true}
             style={styles.input}
@@ -66,6 +66,20 @@ class LoginScreen extends React.Component<Props> {
           >
               <Text style={styles.text}>Войти</Text>
           </TouchableOpacity>
+
+          <Text style={styles.forgotLink}>Забыли пароль?</Text>
+
+          <View style={styles.bottom}>
+            <View style={styles.haveNoAccount}>
+              <Text style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
+            </View>
+            <View style={styles.userAgreement}>
+              <Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
+            </View>
+            <View style={styles.publicOffert}>
+              <Text style={styles.publicOffertText}>Публичная оферта</Text>
+            </View>
+          </View>
         </ImageBackground>
       </View>
     );
@@ -90,6 +104,49 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  forgotLink: {
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    fontSize: 12,
+    paddingTop: 20,
+    color: '#333',
+  },
+  bottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    textDecorationLine: 'underline',
+  },
+  haveNoAccount: {
+    backgroundColor: 'transparent',
+    paddingBottom: 15
+  },
+  haveNoAccountText: {
+    color: '#333',
+    fontSize: 16,
+    backgroundColor: 'transparent'
+  },
+  userAgreement: {
+    backgroundColor: 'transparent',
+    paddingBottom: 15
+  },
+  userAgreementText: {
+    color: '#333',
+    fontSize: 12,
+    backgroundColor: 'transparent'
+  },
+  publicOffert: {
+    backgroundColor: 'transparent',
+    paddingBottom: 25
+  },
+  publicOffertText: {
+    color: '#333',
+    fontSize: 12,
+    backgroundColor: 'transparent'
   },
   label: {
     marginLeft: '15%',
