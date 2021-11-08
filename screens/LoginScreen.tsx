@@ -7,6 +7,7 @@ import {
 	Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
+import ApiService from '../services/api-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
@@ -20,6 +21,8 @@ type Props = {
 };
 
 class LoginScreen extends React.Component<Props> {
+	private api: ApiService = new ApiService();
+
 	constructor(props: Props) {
 		super(props);
 		this.onLogin = this.onLogin.bind(this);
@@ -42,8 +45,9 @@ class LoginScreen extends React.Component<Props> {
 		this.props.actions.changePassword(text);
 	}
 
-	onLogin() {
-		console.log(this)
+	async onLogin(): Promise<void> {
+		const response: any = await this.api.auth(this.props.login, this.props.password);
+		console.log(response);
 	}
 
 	register(): void {
@@ -72,6 +76,7 @@ class LoginScreen extends React.Component<Props> {
 						value={login}
 						placeholder="Она будет служить логином для входа"
 					/>
+
 					<Text style={styles.label}>Введите пароль</Text>
 					<TextInput
 						secureTextEntry={true}
@@ -197,25 +202,6 @@ const styles = StyleSheet.create({
 		height: Dimensions.get('window').width * .3,
 		resizeMode: 'stretch'
 	},
-	button: {
-		flexDirection: 'row', 
-		height: 40, 
-		backgroundColor: '#0099cc',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginTop: 15,
-		elevation:3,
-		width: '70%',
-		marginLeft: '15%'
-	},
-	disabledButton: {
-		backgroundColor: 'grey',
-	},
-	text: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: '#fff'
-	}
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
