@@ -10,13 +10,13 @@ import {
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { connect } from 'react-redux';
 import {
-  changeLogin,
-  changePassword,
-  changeMail,
-  changeName,
-  changeUserDataAgreement,
-  changeUserOfferAgreement,
- } from '../redux/actions/register';
+    changeLogin,
+    changePassword,
+    changeMail,
+    changeName,
+    changeUserDataAgreement,
+    changeUserOfferAgreement,
+} from '../redux/actions/register';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 
