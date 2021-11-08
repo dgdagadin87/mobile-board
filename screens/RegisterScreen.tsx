@@ -5,7 +5,6 @@ import {
     ImageBackground,
     Image,
     Dimensions,
-    TouchableOpacity
 } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { connect } from 'react-redux';
@@ -19,6 +18,7 @@ import {
 } from '../redux/actions/register';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
+import { CustomButton } from '../components/CustomButton';
 
 type Props = {
     login: string,
@@ -32,6 +32,20 @@ type Props = {
 };
 
 class RegisterScreen extends React.Component<Props> {
+	constructor(props: Props) {
+		super(props);
+		this.onRegister = this.onRegister.bind(this);
+	}
+
+	public get isButtonDisabled(): boolean {
+		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
+		if (!login || !password || !name || !mail || !userDataAgreement || !userOfferAgreement) {
+			return true;
+		}
+
+		return false;
+	}
+
 	changeLogin(text: string) {
 		this.props.actions.changeLogin(text);
 	}
@@ -136,13 +150,11 @@ class RegisterScreen extends React.Component<Props> {
 					onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
 				/>
 
-				<TouchableOpacity
-					activeOpacity={0.5}
-					style={styles.button}
-					onPress={this.onRegister}
-				>
-					<Text style={styles.text}>Создать аккаунт</Text>
-				</TouchableOpacity>
+					<CustomButton
+						buttonText="Создать аккаунт"
+						isDisabled={this.isButtonDisabled}
+						onButtonClick={this.onRegister}
+					/>
 
 				<View style={styles.bottom}>
 					<View style={styles.haveAccount}>

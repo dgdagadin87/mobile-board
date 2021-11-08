@@ -5,12 +5,12 @@ import {
 	ImageBackground,
 	Image,
 	Dimensions,
-	TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
+import { CustomButton } from '../components/CustomButton';
 
 type Props = {
 	login: string,
@@ -20,6 +20,20 @@ type Props = {
 };
 
 class LoginScreen extends React.Component<Props> {
+	constructor(props: Props) {
+		super(props);
+		this.onLogin = this.onLogin.bind(this);
+	}
+
+	public get isButtonDisabled(): boolean {
+		const { login, password } = this.props;
+		if (!login || !password) {
+			return true;
+		}
+
+		return false;
+	}
+
 	changeLogin(text: string) {
 		this.props.actions.changeLogin(text);
 	}
@@ -29,7 +43,7 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	onLogin() {
-		console.log('Login')
+		console.log(this)
 	}
 
 	register(): void {
@@ -50,6 +64,7 @@ class LoginScreen extends React.Component<Props> {
 						style={styles.logo}
 						source={require('../assets/images/logo.svg')}
 					/>
+
 					<Text style={styles.label}>Введите почту</Text>
 					<TextInput
 						style={styles.input}
@@ -65,25 +80,24 @@ class LoginScreen extends React.Component<Props> {
 						value={password}
 						placeholder="По нему вас будут узнавать телезрители"
 					/>
-					<TouchableOpacity
-						activeOpacity={0.5}
-						style={styles.button}
-						onPress={this.onLogin}
-					>
-						<Text style={styles.text}>Войти</Text>
-					</TouchableOpacity>
+
+					<CustomButton
+						buttonText="Войти"
+						isDisabled={this.isButtonDisabled}
+						onButtonClick={this.onLogin}
+					/>
 
 					<Text style={styles.forgotLink}>Забыли пароль?</Text>
 
 					<View style={styles.bottom}>
 						<View style={styles.haveNoAccount}>
-						<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
+							<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
 						</View>
 						<View style={styles.userAgreement}>
-						<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
+							<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
 						</View>
 						<View style={styles.publicOffert}>
-						<Text style={styles.publicOffertText}>Публичная оферта</Text>
+							<Text style={styles.publicOffertText}>Публичная оферта</Text>
 						</View>
 					</View>
 				</ImageBackground>
@@ -193,6 +207,9 @@ const styles = StyleSheet.create({
 		elevation:3,
 		width: '70%',
 		marginLeft: '15%'
+	},
+	disabledButton: {
+		backgroundColor: 'grey',
 	},
 	text: {
 		fontSize: 16,
