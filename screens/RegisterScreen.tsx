@@ -4,7 +4,6 @@ import {
     ImageBackground,
     Dimensions,
 } from 'react-native';
-//import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { connect } from 'react-redux';
 import {
     changeLogin,
@@ -17,8 +16,8 @@ import {
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
-import {AppLogo} from "../components/AppLogo";
-import {CustomTextInput} from "../components/CustomTextInput";
+import { AppLogo } from '../components/AppLogo';
+import { CustomTextInput } from '../components/CustomTextInput';
 
 
 type Props = {
@@ -35,7 +34,12 @@ type Props = {
 class RegisterScreen extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
+
 		this.onRegister = this.onRegister.bind(this);
+		this.changeLogin = this.changeLogin.bind(this);
+		this.changePassword = this.changePassword.bind(this);
+		this.changeName = this.changeName.bind(this);
+		this.changeMail = this.changeMail.bind(this);
 	}
 
 	public get isButtonDisabled(): boolean {
@@ -78,29 +82,7 @@ class RegisterScreen extends React.Component<Props> {
 	login(): void {
 		this.props.navigation.navigate('Login');
 	}
-/*<BouncyCheckbox
-isChecked={userDataAgreement}
-size={17}
-fillColor="#0099cc"
-unfillColor="#FFFFFF"
-text="Обработка персональных данных"
-iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-textStyle={{ fontSize: 12,  }}
-style={styles.checkbox}
-onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
-/>
 
-<BouncyCheckbox
-	isChecked={userOfferAgreement}
-	size={17}
-	fillColor="#0099cc"
-	unfillColor="#FFFFFF"
-	text="Услооия пользоввтельского соглашения"
-	iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-	textStyle={{ fontSize: 12,  }}
-	style={styles.checkbox1}
-	onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
-/>*/
 	render() {
 		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
 
@@ -132,12 +114,11 @@ onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
 					/>
 					<CustomTextInput
 						labelText="Придумайте пароль"
-						placeholderText="Выберите надежный, но не забудте его"
+						placeholderText="Выберите надежный, но не забудьте его"
 						isPassword={true}
 						value={password}
 						onChangeValue={this.changePassword}
 					/>
-
 					<CustomButton
 						buttonText="Создать аккаунт"
 						isDisabled={this.isButtonDisabled}

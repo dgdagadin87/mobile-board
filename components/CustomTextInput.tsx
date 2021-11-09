@@ -12,16 +12,16 @@ export type CustomTextInputProps = {
 
 export function CustomTextInput(props: CustomTextInputProps) {
   	return (
-  		<React.Fragment>
+  		<>
 			<Text style={styles.label}>{props.labelText}</Text>
 			<TextInput
 				secureTextEntry={props.isPassword}
 				style={styles.input}
-				onChangeText={(text: string) => props.onChangeValue(text)}
+				onChangeText={props.onChangeValue}
 				value={props.value}
 				placeholder={props.placeholderText}
 			/>
-		</React.Fragment>
+		</>
 	);
 }
 
