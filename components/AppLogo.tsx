@@ -6,12 +6,13 @@ export function AppLogo() {
 		<Image
 			style={{
 				position: 'absolute',
-				top: '3%',
+				top: '7%',
 				left: '29%',
 				width: '42%',
+				resizeMode: 'stretch',
 				height: Dimensions.get('window').width * .3,
 			}}
-			source={require('../assets/images/logo.svg')}
+			source={require('../assets/images/logo.png')}
 		/>
 	);
 }
