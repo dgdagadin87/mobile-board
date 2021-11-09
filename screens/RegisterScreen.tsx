@@ -1,12 +1,10 @@
 import * as React from 'react';
 import {
     StyleSheet,
-    TextInput,
     ImageBackground,
-    Image,
     Dimensions,
 } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+//import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { connect } from 'react-redux';
 import {
     changeLogin,
@@ -19,6 +17,9 @@ import {
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
+import {AppLogo} from "../components/AppLogo";
+import {CustomTextInput} from "../components/CustomTextInput";
+
 
 type Props = {
     login: string,
@@ -77,78 +78,65 @@ class RegisterScreen extends React.Component<Props> {
 	login(): void {
 		this.props.navigation.navigate('Login');
 	}
+/*<BouncyCheckbox
+isChecked={userDataAgreement}
+size={17}
+fillColor="#0099cc"
+unfillColor="#FFFFFF"
+text="Обработка персональных данных"
+iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+textStyle={{ fontSize: 12,  }}
+style={styles.checkbox}
+onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
+/>
 
+<BouncyCheckbox
+	isChecked={userOfferAgreement}
+	size={17}
+	fillColor="#0099cc"
+	unfillColor="#FFFFFF"
+	text="Услооия пользоввтельского соглашения"
+	iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+	textStyle={{ fontSize: 12,  }}
+	style={styles.checkbox1}
+	onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
+/>*/
 	render() {
 		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
 
 		return (
 			<View style={styles.container}>
-				<ImageBackground
-				source={require('../assets/images/auth_bg.png')}
-				resizeMode="cover"
-				style={styles.image}
-				>
-				<Image
-					style={styles.logo}
-					source={require('../assets/images/logo.svg')}
-				/>
+				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
+					<AppLogo />
 
-				<Text style={styles.label}>Как вас зовут?</Text>
-				<TextInput
-					style={styles.input}
-					onChangeText={(text: string) => this.changeName(text)}
-					value={name}
-					placeholder="Как к вам можно обращаться?"
-				/>
-
-				<Text style={styles.label}>Введите свою электронную почту</Text>
-				<TextInput
-					style={styles.input}
-					onChangeText={(text: string) => this.changeMail(text)}
-					value={mail}
-					placeholder="Она будет служить логином для входа"
-				/>
-
-				<Text style={styles.label}>Придумайте имя пользователя</Text>
-				<TextInput
-					style={styles.input}
-					onChangeText={(text: string) => this.changeLogin(text)}
-					value={login}
-					placeholder="По нему вас будут узнавать телезрители"
-				/>
-
-				<Text style={styles.label}>Придумайте пароль</Text>
-				<TextInput
-					secureTextEntry={true}
-					style={styles.input}
-					onChangeText={(text: string) => this.changePassword(text)}
-					value={password}
-					placeholder="Выберите надежный, но не забудте его"
-				/>
-
-				<BouncyCheckbox
-					isChecked={userDataAgreement}
-					size={17}
-					fillColor="#0099cc"
-					unfillColor="#FFFFFF"
-					text="Обработка персональных данных"
-					iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-					textStyle={{ fontSize: 12,  }}
-					style={styles.checkbox}
-					onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
-				/>
-
-				<BouncyCheckbox
-					isChecked={userOfferAgreement}
-					size={17}
-					fillColor="#0099cc"
-					unfillColor="#FFFFFF"
-					text="Услооия пользоввтельского соглашения"
-					iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-					textStyle={{ fontSize: 12,  }}
-					style={styles.checkbox1}
-					onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
-				/>
+					<CustomTextInput
+						labelText="Как вас зовут?"
+						placeholderText="Как к вам можно обращаться?"
+						isPassword={false}
+						value={name}
+						onChangeValue={this.changeName}
+					/>
+					<CustomTextInput
+						labelText="Введите свою электронную почту"
+						placeholderText="Она будет служить логином для входа"
+						isPassword={false}
+						value={mail}
+						onChangeValue={this.changeMail}
+					/>
+					<CustomTextInput
+						labelText="Придумайте имя пользователя"
+						placeholderText="По нему вас будут узнавать телезрители"
+						isPassword={false}
+						value={login}
+						onChangeValue={this.changeLogin}
+					/>
+					<CustomTextInput
+						labelText="Придумайте пароль"
+						placeholderText="Выберите надежный, но не забудте его"
+						isPassword={true}
+						value={password}
+						onChangeValue={this.changePassword}
+					/>
 
 					<CustomButton
 						buttonText="Создать аккаунт"
@@ -156,11 +144,11 @@ class RegisterScreen extends React.Component<Props> {
 						onButtonClick={this.onRegister}
 					/>
 
-				<View style={styles.bottom}>
-					<View style={styles.haveAccount}>
-					<Text onPress={() => this.login()} style={styles.haveAccountText}>Уже есть аккаунт?</Text>
+					<View style={styles.bottom}>
+						<View style={styles.haveAccount}>
+						<Text onPress={() => this.login()} style={styles.haveAccountText}>Уже есть аккаунт?</Text>
+						</View>
 					</View>
-				</View>
 				</ImageBackground>
 			</View>
 		);
@@ -197,21 +185,18 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	forgotLink: {
-		textAlign: 'center',
-		textDecorationLine: 'underline',
-		fontSize: 12,
-		paddingTop: 20,
-		color: '#333',
+	image: {
+		flex: 1,
+		justifyContent: "center",
+		width: '100%',
+		height: '100%'
 	},
 	bottom: {
 		position: 'absolute',
 		bottom: 0,
 		left: 0,
 		width: '100%',
-		textAlign: 'center',
 		backgroundColor: 'transparent',
-		textDecorationLine: 'underline',
 	},
 	haveAccount: {
 		backgroundColor: 'transparent',
@@ -220,54 +205,9 @@ const styles = StyleSheet.create({
 	haveAccountText: {
 		color: '#333',
 		fontSize: 16,
-		backgroundColor: 'transparent'
-	},
-	label: {
-		marginLeft: '15%',
-		color: '#333',
-		fontSize: 14
-	},
-	input: {
-		width: '70%',
-		backgroundColor: '#fff',
-		padding: 7,
-		marginLeft: '15%',
-		marginBottom: 10,
-		marginTop: 5,
-		fontSize: 12,
-		borderWidth: 1,
-		borderColor: '#999999',
-		borderStyle: 'solid'
-	},
-	image: {
-		flex: 1,
-		justifyContent: "center",
-		width: '100%',
-		height: '100%'
-	},
-	logo: {
-		position: 'absolute',
-		top: '2%',
-		left: '29%',
-		width: '42%',
-		height: Dimensions.get('window').width * .3,
-		resizeMode: 'stretch'
-	},
-	button: {
-		flexDirection: 'row', 
-		height: 40, 
-		backgroundColor: '#0099cc',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginTop: 15,
-		elevation:3,
-		width: '70%',
-		marginLeft: '15%'
-	},
-	text: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: '#fff'
+		textAlign: 'center',
+		backgroundColor: 'transparent',
+		textDecorationLine: 'underline',
 	},
 	checkbox: {
 		marginLeft: '15%',

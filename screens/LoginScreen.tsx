@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-	StyleSheet,
-	ImageBackground,
-	Image,
-} from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
@@ -61,11 +57,7 @@ class LoginScreen extends React.Component<Props> {
 
 		return (
 			<View style={styles.container}>
-				<ImageBackground
-					source={require('../assets/images/auth_bg.png')}
-					resizeMode="cover"
-					style={styles.image}
-				>
+				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
 					<CustomTextInput
