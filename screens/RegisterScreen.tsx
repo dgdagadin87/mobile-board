@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
     StyleSheet,
     ImageBackground,
-    Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -13,6 +12,7 @@ import {
     changeUserDataAgreement,
     changeUserOfferAgreement,
 } from '../redux/actions/register';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
@@ -91,6 +91,8 @@ class RegisterScreen extends React.Component<Props> {
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
+					<View style={{ marginTop: 50 }} />
+
 					<CustomTextInput
 						labelText="Как вас зовут?"
 						placeholderText="Как к вам можно обращаться?"
@@ -119,6 +121,31 @@ class RegisterScreen extends React.Component<Props> {
 						value={password}
 						onChangeValue={this.changePassword}
 					/>
+
+					<BouncyCheckbox
+						isChecked={userDataAgreement}
+						size={17}
+						fillColor="#0099cc"
+						unfillColor="#FFFFFF"
+						text="Обработка персональных данных"
+						iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+						textStyle={{ fontSize: 14 }}
+						style={styles.checkbox}
+						onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
+					/>
+
+					<BouncyCheckbox
+						isChecked={userOfferAgreement}
+						size={17}
+						fillColor="#0099cc"
+						unfillColor="#FFFFFF"
+						text="Условия пользоввтельского соглашения"
+						iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+						textStyle={{ fontSize: 14 }}
+						style={styles.checkbox1}
+						onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
+					/>
+
 					<CustomButton
 						buttonText="Создать аккаунт"
 						isDisabled={this.isButtonDisabled}
@@ -193,12 +220,12 @@ const styles = StyleSheet.create({
 	checkbox: {
 		marginLeft: '15%',
 		marginTop: 25,
-		paddingRight: '25',
+		paddingRight: 25,
 	},
 	checkbox1: {
 		marginLeft: '15%',
 		marginTop: 5,
-		paddingRight: '25',
+		paddingRight: 25,
 	}
 });
 
