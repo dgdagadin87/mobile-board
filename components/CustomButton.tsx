@@ -13,8 +13,8 @@ export function CustomButton(props: CustomButtonProps) {
 		<TouchableOpacity
 			activeOpacity={0.5}
 			style={{
-				flexDirection: 'row', 
-				height: 40, 
+				flexDirection: 'row',
+				height: 40,
 				backgroundColor: props.isDisabled ? 'grey' : '#0099cc',
 				alignItems: 'center',
 				justifyContent: 'center',
@@ -26,7 +26,7 @@ export function CustomButton(props: CustomButtonProps) {
 			onPress={props.onButtonClick}
 		>
 			<Text style={{
-				fontSize: 16,
+				fontSize: 18,
 				fontWeight: 'bold',
 				color: '#fff'
 			}}>Войти</Text>

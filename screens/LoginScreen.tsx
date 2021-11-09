@@ -1,17 +1,17 @@
 import * as React from 'react';
 import {
 	StyleSheet,
-	TextInput,
 	ImageBackground,
 	Image,
-	Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
-import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
+import { CustomTextInput } from '../components/CustomTextInput';
+import { AppLogo } from '../components/AppLogo';
 
 type Props = {
 	login: string,
@@ -26,6 +26,8 @@ class LoginScreen extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
 		this.onLogin = this.onLogin.bind(this);
+		this.changeLogin = this.changeLogin.bind(this);
+		this.changePassword = this.changePassword.bind(this);
 	}
 
 	public get isButtonDisabled(): boolean {
@@ -64,26 +66,21 @@ class LoginScreen extends React.Component<Props> {
 					resizeMode="cover"
 					style={styles.image}
 				>
-					<Image
-						style={styles.logo}
-						source={require('../assets/images/logo.svg')}
-					/>
+					<AppLogo />
 
-					<Text style={styles.label}>Введите почту</Text>
-					<TextInput
-						style={styles.input}
-						onChangeText={(text: string) => this.changeLogin(text)}
+					<CustomTextInput
+						labelText="Введите почту"
+						placeholderText="Она будет служить логином для входа"
+						isPassword={false}
 						value={login}
-						placeholder="Она будет служить логином для входа"
+						onChangeValue={this.changeLogin}
 					/>
-
-					<Text style={styles.label}>Введите пароль</Text>
-					<TextInput
-						secureTextEntry={true}
-						style={styles.input}
-						onChangeText={(text: string) => this.changePassword(text)}
+					<CustomTextInput
+						labelText="Введите пароль"
+						placeholderText="По нему вас будут узнавать телезрители"
+						isPassword={true}
 						value={password}
-						placeholder="По нему вас будут узнавать телезрители"
+						onChangeValue={this.changePassword}
 					/>
 
 					<CustomButton
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
 	forgotLink: {
 		textAlign: 'center',
 		textDecorationLine: 'underline',
-		fontSize: 12,
+		fontSize: 14,
 		paddingTop: 20,
 		color: '#333',
 	},
@@ -142,18 +139,19 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		left: 0,
 		width: '100%',
-		textAlign: 'center',
 		backgroundColor: 'transparent',
-		textDecorationLine: 'underline',
 	},
 	haveNoAccount: {
 		backgroundColor: 'transparent',
-		paddingBottom: 15
+		paddingBottom: 15,
+		width: '100%'
 	},
 	haveNoAccountText: {
 		color: '#333',
-		fontSize: 16,
-		backgroundColor: 'transparent'
+		fontSize: 18,
+		backgroundColor: 'transparent',
+		textAlign: 'center',
+		textDecorationLine: 'underline',
 	},
 	userAgreement: {
 		backgroundColor: 'transparent',
@@ -161,8 +159,10 @@ const styles = StyleSheet.create({
 	},
 	userAgreementText: {
 		color: '#333',
-		fontSize: 12,
-		backgroundColor: 'transparent'
+		fontSize: 14,
+		backgroundColor: 'transparent',
+		textAlign: 'center',
+		textDecorationLine: 'underline',
 	},
 	publicOffert: {
 		backgroundColor: 'transparent',
@@ -170,37 +170,16 @@ const styles = StyleSheet.create({
 	},
 	publicOffertText: {
 		color: '#333',
-		fontSize: 12,
-		backgroundColor: 'transparent'
-	},
-	label: {
-		marginLeft: '15%',
-		color: '#333',
-		fontSize: 14
-	},
-	input: {
-		width: '70%',
-		backgroundColor: '#fff',
-		padding: 7,
-		marginLeft: '15%',
-		marginBottom: 10,
-		marginTop: 5,
-		fontSize: 12,
-		border: '1px solid #999'
+		fontSize: 14,
+		backgroundColor: 'transparent',
+		textAlign: 'center',
+		textDecorationLine: 'underline',
 	},
 	image: {
 		flex: 1,
 		justifyContent: "center",
 		width: '100%',
 		height: '100%'
-	},
-	logo: {
-		position: 'absolute',
-		top: '3%',
-		left: '29%',
-		width: '42%',
-		height: Dimensions.get('window').width * .3,
-		resizeMode: 'stretch'
 	},
 });
 

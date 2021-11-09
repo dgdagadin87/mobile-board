@@ -235,7 +235,9 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		marginTop: 5,
 		fontSize: 12,
-		border: '1px solid #999'
+		borderWidth: 1,
+		borderColor: '#999999',
+		borderStyle: 'solid'
 	},
 	image: {
 		flex: 1,
@@ -271,13 +273,11 @@ const styles = StyleSheet.create({
 		marginLeft: '15%',
 		marginTop: 25,
 		paddingRight: '25',
-		overflowWrap: 'normal'
 	},
 	checkbox1: {
 		marginLeft: '15%',
 		marginTop: 5,
 		paddingRight: '25',
-		overflowWrap: 'normal'
 	}
 });
 
