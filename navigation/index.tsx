@@ -32,21 +32,15 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const isLoggedIn: boolean = false;
 
 function RootNavigator() {
     return (
         <Stack.Navigator>
-            {!isLoggedIn ? (
-                <Stack.Group>
-                    <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
-                </Stack.Group>
-            ) : (
-                <Stack.Group>
-                    <Stack.Screen name="Root" component={MainScreen} />
-                </Stack.Group>
-            )}
+            <Stack.Group>
+                <Stack.Screen name="Root" component={MainScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+            </Stack.Group>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
             <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="Modal" component={ModalScreen} />

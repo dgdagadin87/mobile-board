@@ -1,14 +1,25 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
+import StorageService from '../services/storage-service';
 
-export default function MainScreen() {
-	return (
-		<View style={styles.container}>
-		<Text style={styles.title}>Main screen</Text>
-		<Text style={styles.linkText}>It is main screen</Text>
-		</View>
-	);
+export default class MainScreen extends React.Component {
+	private storage = StorageService;
+
+	constructor(props: any) {
+		super(props);
+		this.storage.getData('auth').then((data) => {console.log(data)});
+	}
+
+	render() {
+		return (
+			<View style={styles.container}>
+				<Text style={styles.title}>Main screen</Text>
+				<Text style={styles.linkText}>It is main screen</Text>
+			</View>
+		);
+	}
+
 }
 
 const styles = StyleSheet.create({

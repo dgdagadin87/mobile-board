@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL: string = 'https://nvv.elastoo.com/api/';
 
-export default class ApiService {
+class ApiService {
 
 	private post(url: string, data: any, params: any = {}): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
@@ -25,3 +25,6 @@ export default class ApiService {
 	}
 
 }
+
+const apiService: ApiService = new ApiService();
+export default apiService;

@@ -3,6 +3,8 @@ import { StyleSheet, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
+import StorageService from '../services/storage-service';
+import AlertService from '../services/alert-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
@@ -17,7 +19,9 @@ type Props = {
 };
 
 class LoginScreen extends React.Component<Props> {
-	private api: ApiService = new ApiService();
+	private api = ApiService;
+	private storage = StorageService;
+	private alert = AlertService;
 
 	constructor(props: Props) {
 		super(props);
@@ -45,8 +49,14 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	async onLogin(): Promise<void> {
-		const response: any = await this.api.auth(this.props.login, this.props.password);
-		console.log(response);
+		try {
+			const response: any = await this.api.auth(this.props.login, this.props.password);
+			await this.storage.setData('auth', response);
+			this.props.navigation.navigate('Root');
+		}
+		catch(err) {
+			this.alert.alert('Ошибка', 'Что-то пошло не так');
+		}
 	}
 
 	register(): void {
