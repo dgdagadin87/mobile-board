@@ -1,17 +1,5 @@
 import StorageService from './storage-service';
 
-export type UserData = {
-	key: string;
-	created_at: string;
-	email: string;
-	is_active: boolean;
-	is_staff: boolean;
-	is_superuser: boolean;
-	personal_data: boolean;
-	user_agreement: boolean;
-	username: string;
-}
-
 class AuthService {
 
 	private storage = StorageService;
@@ -23,6 +11,11 @@ class AuthService {
 		}
 
 		return false;
+	}
+
+	public async getUserData(): Promise<any> {
+		const data: any = await this.storage.getData('auth');
+		return data;
 	}
 
 }
