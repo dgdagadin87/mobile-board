@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
-import StorageService from '../services/storage-service';
+import WithAuth from '../components/hocs/WithAuth';
 
-export default class MainScreen extends React.Component {
-	private storage = StorageService;
-
-	constructor(props: any) {
-		super(props);
-		this.storage.getData('auth').then((data) => {console.log(data)});
-	}
+class MainScreen extends React.Component {
 
 	render() {
 		return (
@@ -42,3 +36,7 @@ const styles = StyleSheet.create({
 		color: '#2e78b7',
 	},
 });
+
+const extendedComponent = WithAuth(MainScreen);
+
+export default extendedComponent;

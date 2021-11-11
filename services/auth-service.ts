@@ -14,13 +14,16 @@ export type UserData = {
 
 class AuthService {
 
+	private storage = StorageService;
+
 	public async isAuth(): Promise<boolean> {
-		return true;
+		const authData: any = await this.storage.getData('auth');
+		if (authData && !!authData.key && !!authData.email && !!authData.username) {
+			return true;
+		}
+
+		return false;
 	}
-
-	/*public async getAuthData(): UserData {
-
-	}*/
 
 }
 
