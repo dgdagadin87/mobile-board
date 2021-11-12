@@ -33,17 +33,41 @@ class MainScreen extends React.Component<any> {
 		await this.setUserData();
 	}
 
+	onHelpClick() {
+		this.alert.alert('Помощь', 'Это кнопка помощи');
+	}
+
 	onNewVideoClick() {
 		this.props.navigation.navigate('NewVideo');
 	}
 
 	onEditClick() {
-		this.alert.alert('Редактирование профиля', 'Свяжитесь с поддержкой по номеру ... или электронной почте .....');
+		this.alert.alert(
+			'Редактирование профиля',
+			'Свяжитесь с поддержкой по номеру ... или электронной почте .....'
+		);
 	}
 
 	async setUserData(): Promise<void> {
 		const userData: any = await this.auth.getUserData();
 		this.props.actions.setUserData(userData);
+	}
+
+	renderEmptyVideoMessage() {
+		return (
+			<View style={styles.emptyContainer}>
+				<Image
+					style={styles.emptyImage}
+					source={require('../assets/images/novideoicon.png')}
+				/>
+				<Text style={styles.emptyTitle}>
+					Кажется, у вас нет ни{"\n"}одного видео!
+				</Text>
+				<Text style={styles.emptyDescription}>
+					Скорее же запишите его с помощью большой кнопки с камерой на вашем экране и отправьте нам в редакцию.{"\n\n"}Мы с удовольствием посмотрим!
+				</Text>
+			</View>
+		);
 	}
 
 	render() {
@@ -68,6 +92,15 @@ class MainScreen extends React.Component<any> {
 					/>
 				</View>
 
+				<FontAwesome
+					onPress={this.onHelpClick}
+					name="question-circle"
+					size={25}
+					color={'white'}
+					style={styles.helpIcon}
+				/>
+				<Text onPress={this.onHelpClick} style={styles.helpText}>Помощь</Text>
+
 				<View style={styles.newVideoBlock}>
 					<View style={styles.newVideoLine}></View>
 					<TouchableOpacity
@@ -81,6 +114,8 @@ class MainScreen extends React.Component<any> {
 						/>
 					</TouchableOpacity>
 				</View>
+
+				{ videos.length < 1 ? this.renderEmptyVideoMessage() : null }
 			</ImageBackground>
 		);
 	}
@@ -135,6 +170,19 @@ const styles = StyleSheet.create({
 		top: 40,
 		left: 50,
 	},
+	helpIcon: {
+		position: 'absolute',
+		top: 174,
+		left: 25,
+	},
+	helpText: {
+		position: 'absolute',
+		top: 179,
+		left: 50,
+		fontSize: 12,
+		textDecorationLine: 'underline',
+		color: 'white',
+	},
 	newVideoBlock: {
 		marginTop: 150,
 		position: 'relative',
@@ -166,6 +214,43 @@ const styles = StyleSheet.create({
 		width: 40,
 		height: 30,
 		resizeMode: 'stretch',
+	},
+	emptyContainer: {
+		position: 'relative',
+		marginTop: 105,
+		width: '90%',
+		marginLeft: '5%',
+        height: 250,
+		backgroundColor: '#Bdd2d8',
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5,
+	},
+	emptyImage: {
+		position: 'absolute',
+		top: 10,
+		left: (platform.width * .45 - 25),
+		width: 50,
+		height: 60,
+		resizeMode: 'stretch',
+	},
+	emptyTitle: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		marginTop: 85,
+		textAlign: 'center',
+        color: 'white',
+	},
+	emptyDescription: {
+		fontSize: 12,
+		marginTop: 15,
+		textAlign: 'center',
+		color: 'grey',
 	}
 });
 
