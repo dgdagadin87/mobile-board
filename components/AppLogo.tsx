@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Dimensions, Image } from 'react-native';
+import { Image } from 'react-native';
+import PlatformService from '../services/platform-service';
+
+const platform = PlatformService;
 
 export function AppLogo() {
   	return (
@@ -10,7 +13,7 @@ export function AppLogo() {
 				left: '29%',
 				width: '42%',
 				resizeMode: 'stretch',
-				height: Dimensions.get('window').width * .3,
+				height: platform.width * .3,
 			}}
 			source={require('../assets/images/logo.png')}
 		/>
