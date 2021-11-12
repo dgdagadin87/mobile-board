@@ -34,7 +34,7 @@ class MainScreen extends React.Component<any> {
 	}
 
 	onNewVideoClick() {
-		console.log('qqqqq')
+		this.props.navigation.navigate('NewVideo');
 	}
 
 	onEditClick() {

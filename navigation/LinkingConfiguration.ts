@@ -16,6 +16,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 		Root: '',
 		Login: 'login',
 		Register: 'register',
+		NewVideo: 'new_video',
 		Modal: 'modal',
 		NotFound: '*',
 		},
