@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, ImageBackground } from 'react-native';
+import {
+	StyleSheet,
+	ImageBackground,
+	TouchableWithoutFeedback,
+	Keyboard
+} from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
@@ -17,6 +22,12 @@ type Props = {
 	actions: any,
 	navigation: any,
 };
+
+const DismissKeyboard = ({ children }: any) => (
+	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+		{children}
+	</TouchableWithoutFeedback>
+);
 
 class LoginScreen extends React.Component<Props> {
 	private api = ApiService;
@@ -67,46 +78,48 @@ class LoginScreen extends React.Component<Props> {
 		const { login, password } = this.props;
 
 		return (
-			<View style={styles.container}>
-				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
-					<AppLogo />
+			<DismissKeyboard>
+				<View style={styles.container}>
+					<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
+						<AppLogo />
 
-					<CustomTextInput
-						labelText="Введите почту"
-						placeholderText="Она будет служить логином для входа"
-						isPassword={false}
-						value={login}
-						onChangeValue={this.changeLogin}
-					/>
-					<CustomTextInput
-						labelText="Введите пароль"
-						placeholderText="По нему вас будут узнавать телезрители"
-						isPassword={true}
-						value={password}
-						onChangeValue={this.changePassword}
-					/>
+						<CustomTextInput
+							labelText="Введите почту"
+							placeholderText="Она будет служить логином для входа"
+							isPassword={false}
+							value={login}
+							onChangeValue={this.changeLogin}
+						/>
+						<CustomTextInput
+							labelText="Введите пароль"
+							placeholderText="По нему вас будут узнавать телезрители"
+							isPassword={true}
+							value={password}
+							onChangeValue={this.changePassword}
+						/>
 
-					<CustomButton
-						buttonText="Войти"
-						isDisabled={this.isButtonDisabled}
-						onButtonClick={this.onLogin}
-					/>
+						<CustomButton
+							buttonText="Войти"
+							isDisabled={this.isButtonDisabled}
+							onButtonClick={this.onLogin}
+						/>
 
-					<Text style={styles.forgotLink}>Забыли пароль?</Text>
+						<Text style={styles.forgotLink}>Забыли пароль?</Text>
 
-					<View style={styles.bottom}>
-						<View style={styles.haveNoAccount}>
-							<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
+						<View style={styles.bottom}>
+							<View style={styles.haveNoAccount}>
+								<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
+							</View>
+							<View style={styles.userAgreement}>
+								<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
+							</View>
+							<View style={styles.publicOffert}>
+								<Text style={styles.publicOffertText}>Публичная оферта</Text>
+							</View>
 						</View>
-						<View style={styles.userAgreement}>
-							<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
-						</View>
-						<View style={styles.publicOffert}>
-							<Text style={styles.publicOffertText}>Публичная оферта</Text>
-						</View>
-					</View>
-				</ImageBackground>
-			</View>
+					</ImageBackground>
+				</View>
+			</DismissKeyboard>
 		);
 	}
 };

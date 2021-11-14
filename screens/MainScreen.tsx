@@ -3,7 +3,7 @@ import {
 	ImageBackground,
 	StyleSheet,
 	Image,
-	TouchableOpacity
+	TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { connect } from 'react-redux';
