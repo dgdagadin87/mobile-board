@@ -27,6 +27,7 @@ class MainScreen extends React.Component<any> {
 
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
+		this.onHelpClick = this.onHelpClick.bind(this);
 	}
 
 	async componentDidMount(): Promise<void> {
@@ -184,24 +185,24 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	newVideoBlock: {
-		marginTop: 150,
+		marginTop: 120,
 		position: 'relative',
-		width: '100%'
+		width: '100%',
+		backgroundColor: 'transparent',
 	},
 	newVideoLine: {
 		height: 5,
 		position: 'absolute',
+		top: 35,
 		backgroundColor: 'white',
 		width: '100%',
 		zIndex: 1,
 	},
 	newVideoContainer: {
-		position: 'absolute',
-		top: -33,
-		left: (platform.width*.5 - 35),
 		width: 70,
 		height: 70,
 		zIndex: 2,
+		marginLeft: (platform.width*.5 - 35),
 		backgroundColor: '#0099cc',
 		borderColor: 'white',
 		borderWidth: 5,
@@ -210,7 +211,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 10
 	},
 	newVideoButton: {
-		zIndex: 3,
 		width: 40,
 		height: 30,
 		resizeMode: 'stretch',
