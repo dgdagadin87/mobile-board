@@ -14,6 +14,11 @@ class NewVideoScreen extends React.Component<any> {
 		super(props);
 
 		this.startVideoClick = this.startVideoClick.bind(this);
+		this.goBackClick = this.goBackClick.bind(this);
+	}
+
+	goBackClick() {
+		this.props.navigation.navigate('Root');
 	}
 
 	startVideoClick() {
@@ -30,6 +35,10 @@ class NewVideoScreen extends React.Component<any> {
 				<View style={styles.container}>
 
 					<AppLogo />
+
+					<Text onPress={this.goBackClick} style={styles.returnBack}>
+						{"\<"}&nbsp;Вернуться
+					</Text>
 
 					<TouchableOpacity
 						activeOpacity={0.5}
@@ -130,6 +139,14 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: '#ffffff',
 		textAlign: 'center',
+	},
+	returnBack: {
+		color: '#ffffff',
+		textDecorationLine: 'underline',
+		textAlign: 'left',
+		width: '100%',
+		marginTop: 20,
+		marginLeft: 15
 	}
 });
 
