@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
 import StorageService from '../services/storage-service';
 import AlertService from '../services/alert-service';
+import PlatformService from '../services/platform-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
@@ -33,6 +34,7 @@ class LoginScreen extends React.Component<Props> {
 	private api = ApiService;
 	private storage = StorageService;
 	private alert = AlertService;
+	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
@@ -74,52 +76,58 @@ class LoginScreen extends React.Component<Props> {
 		this.props.navigation.navigate('Register');
 	}
 
-	render() {
+	renderMain() {
 		const { login, password } = this.props;
 
 		return (
-			<DismissKeyboard>
-				<View style={styles.container}>
-					<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
-						<AppLogo />
+			<View style={styles.container}>
+				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
+					<AppLogo />
 
-						<CustomTextInput
-							labelText="Введите почту"
-							placeholderText="Она будет служить логином для входа"
-							isPassword={false}
-							value={login}
-							onChangeValue={this.changeLogin}
-						/>
-						<CustomTextInput
-							labelText="Введите пароль"
-							placeholderText="По нему вас будут узнавать телезрители"
-							isPassword={true}
-							value={password}
-							onChangeValue={this.changePassword}
-						/>
+					<CustomTextInput
+						labelText="Введите почту"
+						placeholderText="Она будет служить логином для входа"
+						isPassword={false}
+						value={login}
+						onChangeValue={this.changeLogin}
+					/>
+					<CustomTextInput
+						labelText="Введите пароль"
+						placeholderText="По нему вас будут узнавать телезрители"
+						isPassword={true}
+						value={password}
+						onChangeValue={this.changePassword}
+					/>
 
-						<CustomButton
-							buttonText="Войти"
-							isDisabled={this.isButtonDisabled}
-							onButtonClick={this.onLogin}
-						/>
+					<CustomButton
+						buttonText="Войти"
+						isDisabled={this.isButtonDisabled}
+						onButtonClick={this.onLogin}
+					/>
 
-						<Text style={styles.forgotLink}>Забыли пароль?</Text>
+					<Text style={styles.forgotLink}>Забыли пароль?</Text>
 
-						<View style={styles.bottom}>
-							<View style={styles.haveNoAccount}>
-								<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
-							</View>
-							<View style={styles.userAgreement}>
-								<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
-							</View>
-							<View style={styles.publicOffert}>
-								<Text style={styles.publicOffertText}>Публичная оферта</Text>
-							</View>
+					<View style={styles.bottom}>
+						<View style={styles.haveNoAccount}>
+							<Text onPress={() => this.register()} style={styles.haveNoAccountText}>У меня ещё нет аккаунта</Text>
 						</View>
-					</ImageBackground>
-				</View>
-			</DismissKeyboard>
+						<View style={styles.userAgreement}>
+							<Text style={styles.userAgreementText}>Условия пользовательского соглашения</Text>
+						</View>
+						<View style={styles.publicOffert}>
+							<Text style={styles.publicOffertText}>Публичная оферта</Text>
+						</View>
+					</View>
+				</ImageBackground>
+			</View>
+		);
+	}
+
+	render() {
+		return (
+			this.platform.isWeb ?
+				this.renderMain() :
+				<DismissKeyboard>{this.renderMain()}</DismissKeyboard>
 		);
 	}
 };

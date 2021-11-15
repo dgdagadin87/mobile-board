@@ -24,6 +24,16 @@ class ApiService {
 		return this.post('account/auth/', { email: login, password: password });
 	}
 
+	public register(name: string, password: string, username: string, email: string): Promise<void> {
+		return this.post('account/registration/', {
+			email, password,
+			username, name,
+			is_active: true,
+			personal_data: true,
+			user_agreement: true
+		});
+	}
+
 }
 
 const apiService: ApiService = new ApiService();

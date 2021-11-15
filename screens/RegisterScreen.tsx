@@ -20,6 +20,9 @@ import { Text, View } from '../components/Themed';
 import { CustomButton } from '../components/CustomButton';
 import { AppLogo } from '../components/AppLogo';
 import { CustomTextInput } from '../components/CustomTextInput';
+import ApiService from '../services/api-service';
+import AlertService from '../services/alert-service';
+import PlatformService from '../services/platform-service';
 
 
 type Props = {
@@ -40,6 +43,11 @@ const DismissKeyboard = ({ children }: any) => (
 );
 
 class RegisterScreen extends React.Component<Props> {
+
+	private api = ApiService;
+	private alert = AlertService;
+	private platform = PlatformService;
+
 	constructor(props: Props) {
 		super(props);
 
@@ -83,92 +91,109 @@ class RegisterScreen extends React.Component<Props> {
 		this.props.actions.changeUserOfferAgreement(value);
 	}
 
-	onRegister() {
-		console.log('Register')
+	async onRegister() {
+		try {
+			const response: any = await this.api.register(
+				this.props.login,
+				this.props.password,
+				this.props.name,
+				this.props.mail
+			);
+			this.alert.alert('Успех', 'Вы успешно зарегистрировались в системе');
+		}
+		catch(err) {
+			this.alert.alert('Ошибка', 'Что-то пошло не так');
+		}
 	}
 
 	login(): void {
 		this.props.navigation.navigate('Login');
 	}
 
-	render() {
+	renderMain() {
 		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
 
 		return (
-			<DismissKeyboard>
-				<View style={styles.container}>
-					<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
-						<AppLogo />
+			<View style={styles.container}>
+				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
+					<AppLogo />
 
-						<View style={{ marginTop: 50 }} />
+					<View style={{ marginTop: 50 }} />
 
-						<CustomTextInput
-							labelText="Как вас зовут?"
-							placeholderText="Как к вам можно обращаться?"
-							isPassword={false}
-							value={name}
-							onChangeValue={this.changeName}
-						/>
-						<CustomTextInput
-							labelText="Введите свою электронную почту"
-							placeholderText="Она будет служить логином для входа"
-							isPassword={false}
-							value={mail}
-							onChangeValue={this.changeMail}
-						/>
-						<CustomTextInput
-							labelText="Придумайте имя пользователя"
-							placeholderText="По нему вас будут узнавать телезрители"
-							isPassword={false}
-							value={login}
-							onChangeValue={this.changeLogin}
-						/>
-						<CustomTextInput
-							labelText="Придумайте пароль"
-							placeholderText="Выберите надежный, но не забудьте его"
-							isPassword={true}
-							value={password}
-							onChangeValue={this.changePassword}
-						/>
+					<CustomTextInput
+						labelText="Как вас зовут?"
+						placeholderText="Как к вам можно обращаться?"
+						isPassword={false}
+						value={name}
+						onChangeValue={this.changeName}
+					/>
+					<CustomTextInput
+						labelText="Введите свою электронную почту"
+						placeholderText="Она будет служить логином для входа"
+						isPassword={false}
+						value={mail}
+						onChangeValue={this.changeMail}
+					/>
+					<CustomTextInput
+						labelText="Придумайте имя пользователя"
+						placeholderText="По нему вас будут узнавать телезрители"
+						isPassword={false}
+						value={login}
+						onChangeValue={this.changeLogin}
+					/>
+					<CustomTextInput
+						labelText="Придумайте пароль"
+						placeholderText="Выберите надежный, но не забудьте его"
+						isPassword={true}
+						value={password}
+						onChangeValue={this.changePassword}
+					/>
 
-						<BouncyCheckbox
-							isChecked={userDataAgreement}
-							size={17}
-							fillColor="#0099cc"
-							unfillColor="#FFFFFF"
-							text="Обработка персональных данных"
-							iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-							textStyle={{ fontSize: 14 }}
-							style={styles.checkbox}
-							onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
-						/>
+					<BouncyCheckbox
+						isChecked={userDataAgreement}
+						size={17}
+						fillColor="#0099cc"
+						unfillColor="#FFFFFF"
+						text="Обработка персональных данных"
+						iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+						textStyle={{ fontSize: 14 }}
+						style={styles.checkbox}
+						onPress={(isChecked: boolean) => this.changeUserDataAgreement(isChecked)}
+					/>
 
-						<BouncyCheckbox
-							isChecked={userOfferAgreement}
-							size={17}
-							fillColor="#0099cc"
-							unfillColor="#FFFFFF"
-							text="Условия пользоввтельского соглашения"
-							iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
-							textStyle={{ fontSize: 14 }}
-							style={styles.checkbox1}
-							onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
-						/>
+					<BouncyCheckbox
+						isChecked={userOfferAgreement}
+						size={17}
+						fillColor="#0099cc"
+						unfillColor="#FFFFFF"
+						text="Условия пользоввтельского соглашения"
+						iconStyle={{ borderColor: '#0099cc', borderRadius: 5 }}
+						textStyle={{ fontSize: 14 }}
+						style={styles.checkbox1}
+						onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
+					/>
 
-						<CustomButton
-							buttonText="Создать аккаунт"
-							isDisabled={this.isButtonDisabled}
-							onButtonClick={this.onRegister}
-						/>
+					<CustomButton
+						buttonText="Создать аккаунт"
+						isDisabled={this.isButtonDisabled}
+						onButtonClick={this.onRegister}
+					/>
 
-						<View style={styles.bottom}>
-							<View style={styles.haveAccount}>
+					<View style={styles.bottom}>
+						<View style={styles.haveAccount}>
 							<Text onPress={() => this.login()} style={styles.haveAccountText}>Уже есть аккаунт?</Text>
-							</View>
 						</View>
-					</ImageBackground>
-				</View>
-			</DismissKeyboard>
+					</View>
+				</ImageBackground>
+			</View>
+		);
+	}
+
+	render() {
+		return (
+			this.platform.isWeb ?
+				this.renderMain() :
+				<DismissKeyboard>{this.renderMain()}</DismissKeyboard>
 		);
   	}
 };
