@@ -18,6 +18,7 @@ export type RootStackParamList = {
   NewVideo: undefined;
   Modal: undefined;
   NotFound: undefined;
+  Qqq: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

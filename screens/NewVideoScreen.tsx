@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ImageBackground, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { RNCamera } from 'react-native-camera';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { AppLogo } from '../components/AppLogo';
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
 		textDecorationLine: 'underline',
 		textAlign: 'left',
 		width: '100%',
-		marginTop: 20,
+		marginTop: 40,
 		marginLeft: 15
 	}
 });
