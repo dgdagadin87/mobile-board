@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ImageBackground, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Camera } from 'expo-camera';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -8,6 +9,60 @@ import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { AppLogo } from '../components/AppLogo';
 import AlertService from '../services/alert-service';
+
+function CameraComponent(props: any) {
+	const [isRecording, setIsRecording] = React.useState<boolean>(false);
+	const [cameraRef, setCameraRef] = React.useState<any>(null);
+
+	const {
+		hasPermissions = false,
+	} = props;
+
+	const onPress = async() => {
+		if (!isRecording) {
+			setIsRecording(true)
+			let video = await cameraRef.recordAsync();
+			console.log(video)
+		}
+		else {
+			setIsRecording(false);
+			cameraRef.stopRecording();
+		}
+	};
+
+	if (!hasPermissions) {
+		return (
+			<View style={styles.banner}>
+				<Text style={styles.bannerTitle}>
+					Нет доступа к камере/микрофону
+				</Text>
+				<View style={styles.bannerDescription}>
+					<Text style={styles.bannerDescriptionText}>
+						Чтобы записать видео, разрешите приложению пользоваться кмерой и микрофоном в настройках телефона
+					</Text>
+				</View>
+			</View>
+		)
+	}
+
+	return (
+		<Camera
+			style={{ flex: 1 }}
+			type={Camera.Constants.Type.back}
+			ref={ref => setCameraRef(ref)}
+		>
+			<View style={styles.cameraViewContainer}>
+				<View style={styles.cameraView}>
+					<TouchableOpacity style={{alignSelf: 'center'}} onPress={onPress}>
+						<View style={styles.recordButtonContainer}>
+							<View style={styles.recordButton} />
+						</View>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Camera>
+	);
+}
 
 class NewVideoScreen extends React.Component<any, any> {
 
@@ -18,25 +73,21 @@ class NewVideoScreen extends React.Component<any, any> {
 
 		this.startVideoClick = this.startVideoClick.bind(this);
 		this.goBackClick = this.goBackClick.bind(this);
+		this.onChangeOrientationListener = this.onChangeOrientationListener.bind(this);
 
-		this.state = { isLandscape: false, isRecording: false };
+		this.state = {
+			isLandscape: false,
+			isRecording: false,
+			hasPermissions: false,
+			showCamera: false,
+		};
 	}
 
 	async componentDidMount() {
+		await this.setPermissions();
+
+		ScreenOrientation.addOrientationChangeListener(this.onChangeOrientationListener);
 		await ScreenOrientation.unlockAsync();
-
-		ScreenOrientation.addOrientationChangeListener((event: any = {}) => {
-			const { orientationInfo = {} } = event;
-			const orientation: number = orientationInfo.orientation;
-			const OrientationContainer = ScreenOrientation.Orientation;
-
-			if ([OrientationContainer.LANDSCAPE_LEFT, OrientationContainer.LANDSCAPE_RIGHT].indexOf(orientation) !== -1) {
-				this.setState({ isLandscape: true });
-			}
-			else {
-				this.setState({ isLandscape: false });
-			}
-		});
 	}
 
 	async componentWillUnmount() {
@@ -44,12 +95,32 @@ class NewVideoScreen extends React.Component<any, any> {
 		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 	}
 
+	async setPermissions() {
+		const { status: cameraStatus = null } = await Camera.getCameraPermissionsAsync();
+		const { status: microphoneStatus = null } = await Camera.getMicrophonePermissionsAsync();
+
+		this.setState({ hasPermissions: microphoneStatus === 'granted' && cameraStatus === 'granted' });
+	}
+
+	onChangeOrientationListener(event: any = {}) {
+		const { orientationInfo = {} } = event;
+		const orientation: number = orientationInfo.orientation;
+		const OrientationContainer = ScreenOrientation.Orientation;
+
+		if ([OrientationContainer.LANDSCAPE_LEFT, OrientationContainer.LANDSCAPE_RIGHT].indexOf(orientation) !== -1) {
+			this.setState({ isLandscape: true });
+		}
+		else {
+			this.setState({ isLandscape: false });
+		}
+	}
+
 	goBackClick() {
 		this.props.navigation.navigate('Root');
 	}
 
 	startVideoClick() {
-		this.alert.alert('', 'Запись видео началась!');
+		this.setState({ showCamera: true });
 	}
 
 	renderBackLink() {
@@ -106,6 +177,16 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	render() {
+		const { hasPermissions = false, showCamera = false } = this.state;
+
+		if (showCamera) {
+			return (
+				<CameraComponent
+					hasPermissions={hasPermissions}
+				/>
+			);
+		}
+
 		return (
 			<ImageBackground
 				source={require('../assets/images/auth_bg.png')}
@@ -113,15 +194,10 @@ class NewVideoScreen extends React.Component<any, any> {
 				style={styles.image}
 			>
 				<View style={styles.container}>
-
 					<AppLogo />
-
 					{ this.renderBackLink() }
-
 					{ this.renderStartRecordingButton() }
-
 					{ this.renderBanner() }
-
 				</View>
 			</ImageBackground>
 		);
@@ -216,6 +292,36 @@ const styles = StyleSheet.create({
 		width: '100%',
 		marginTop: 45,
 		marginLeft: 15
+	},
+	cameraViewContainer: {
+		flex: 1,
+		backgroundColor: 'transparent',
+		justifyContent: 'flex-end'
+	},
+	cameraView: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		backgroundColor: 'transparent',
+	},
+	recordButtonContainer: {
+		borderWidth: 2,
+		borderRadius:25,
+		borderColor: 'red',
+		height: 50,
+		width: 50,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginBottom: 30,
+		backgroundColor: 'transparent',
+	},
+	recordButton: {
+		borderWidth: 2,
+		borderRadius:25,
+		borderColor: 'red',
+		height: 40, width:40,
+		backgroundColor: 'red',
 	}
 });
 
