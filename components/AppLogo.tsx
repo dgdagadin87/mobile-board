@@ -9,11 +9,11 @@ export function AppLogo() {
 		<Image
 			style={{
 				position: 'absolute',
-				top: '7%',
-				left: '29%',
-				width: '42%',
+				top: '8%',
+				left: (platform.width*.5 - 105),
+				width: 210,
 				resizeMode: 'stretch',
-				height: platform.width * .3,
+				height: 120,
 			}}
 			source={require('../assets/images/logo.png')}
 		/>

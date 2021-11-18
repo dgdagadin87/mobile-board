@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { ImageBackground, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { setVideoData } from '../redux/actions/newVideo';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { AppLogo } from '../components/AppLogo';
 import AlertService from '../services/alert-service';
 
-
-class NewVideoScreen extends React.Component<any> {
+class NewVideoScreen extends React.Component<any, any> {
 
 	private alert = AlertService;
 
@@ -15,6 +18,30 @@ class NewVideoScreen extends React.Component<any> {
 
 		this.startVideoClick = this.startVideoClick.bind(this);
 		this.goBackClick = this.goBackClick.bind(this);
+
+		this.state = { isLandscape: false, isRecording: false };
+	}
+
+	async componentDidMount() {
+		await ScreenOrientation.unlockAsync();
+
+		ScreenOrientation.addOrientationChangeListener((event: any = {}) => {
+			const { orientationInfo = {} } = event;
+			const orientation: number = orientationInfo.orientation;
+			const OrientationContainer = ScreenOrientation.Orientation;
+
+			if ([OrientationContainer.LANDSCAPE_LEFT, OrientationContainer.LANDSCAPE_RIGHT].indexOf(orientation) !== -1) {
+				this.setState({ isLandscape: true });
+			}
+			else {
+				this.setState({ isLandscape: false });
+			}
+		});
+	}
+
+	async componentWillUnmount() {
+		ScreenOrientation.removeOrientationChangeListeners();
+		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 	}
 
 	goBackClick() {
@@ -23,6 +50,59 @@ class NewVideoScreen extends React.Component<any> {
 
 	startVideoClick() {
 		this.alert.alert('', 'Запись видео началась!');
+	}
+
+	renderBackLink() {
+		if (this.state.isLandscape) {
+			return null;
+		}
+
+		return (
+			<Text onPress={this.goBackClick} style={styles.returnBack}>
+				{"\<"}&nbsp;Вернуться
+			</Text>
+		);
+	}
+
+	renderStartRecordingButton() {
+		if (!this.state.isLandscape) {
+			return null;
+		}
+
+		return (
+			<TouchableOpacity
+				activeOpacity={0.5}
+				onPress={this.startVideoClick}
+				style={styles.startVideoButton}
+			>
+				<Image
+					style={{ width: 100, height: 87.4 }}
+					source={require('../assets/images/startvideo.png')}
+				/>
+			</TouchableOpacity>
+		);
+	}
+
+	renderBanner() {
+		if (this.state.isLandscape) {
+			return null;
+		}
+
+		return (
+			<View style={styles.banner}>
+				<Text style={styles.bannerTitle}>
+					чтобы записать видео нужно перевернуть устройство горизонтально
+				</Text>
+				<View style={styles.demoControl}>
+					<View style={styles.demoControlInner} />
+				</View>
+				<View style={styles.bannerDescription}>
+					<Text style={styles.bannerDescriptionText}>
+						Нажмите кнопку, которая появится на экране после поворота,{"\n"}когда будете готовы
+					</Text>
+				</View>
+			</View>
+		);
 	}
 
 	render() {
@@ -36,40 +116,29 @@ class NewVideoScreen extends React.Component<any> {
 
 					<AppLogo />
 
-					<Text onPress={this.goBackClick} style={styles.returnBack}>
-						{"\<"}&nbsp;Вернуться
-					</Text>
+					{ this.renderBackLink() }
 
-					<TouchableOpacity
-						activeOpacity={0.5}
-						onPress={this.startVideoClick}
-						style={styles.startVideoButton}
-					>
-						<Image
-							style={{ width: 100, height: 87.4 }}
-							source={require('../assets/images/startvideo.png')}
-						/>
-					</TouchableOpacity>
+					{ this.renderStartRecordingButton() }
 
-					<View style={styles.banner}>
-						<Text style={styles.bannerTitle}>
-							чтобы записать видео нужно перевернуть устройство горизонтально
-						</Text>
-						<View style={styles.demoControl}>
-							<View style={styles.demoControlInner} />
-						</View>
-						<View style={styles.bannerDescription}>
-							<Text style={styles.bannerDescriptionText}>
-								Нажмите кнопку сверху,{"\n"}когда будете готовы
-							</Text>
-						</View>
-					</View>
+					{ this.renderBanner() }
 
 				</View>
 			</ImageBackground>
 		);
 	}
 }
+
+const mapStateToProps = (state: any) => ({
+	video: state.newVideoData.videos,
+});
+
+const ActionCreators = Object.assign(
+	{},
+	{ setVideoData }
+);
+const mapDispatchToProps = (dispatch: any) => ({
+	actions: bindActionCreators(ActionCreators, dispatch),
+});
 
 const styles = StyleSheet.create({
 	container: {
@@ -92,7 +161,7 @@ const styles = StyleSheet.create({
 		width: '90%',
 		backgroundColor: '#969692',
 		borderRadius: 10,
-		marginTop: 30,
+		marginTop: 300,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
@@ -145,10 +214,10 @@ const styles = StyleSheet.create({
 		textDecorationLine: 'underline',
 		textAlign: 'left',
 		width: '100%',
-		marginTop: 20,
+		marginTop: 45,
 		marginLeft: 15
 	}
 });
 
 const extendedComponent = WithAuth(NewVideoScreen);
-export default extendedComponent;
+export default connect(mapStateToProps, mapDispatchToProps)(extendedComponent);
