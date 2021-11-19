@@ -1,4 +1,8 @@
-import { NEW_VIDEO_SET_VIDEO_DATA } from '../constants';
+import {
+    NEW_VIDEO_SET_VIDEO_DATA,
+    SEND_ADDED_VIDEO_NAME,
+    SEND_ADDED_VIDEO_DESCRIPTION
+} from '../constants';
 
 const initialState = {
     video: {}
