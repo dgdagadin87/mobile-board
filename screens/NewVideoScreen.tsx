@@ -8,7 +8,6 @@ import { setVideoData } from '../redux/actions/newVideo';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { AppLogo } from '../components/AppLogo';
-import AlertService from '../services/alert-service';
 
 function CameraComponent(props: any) {
 	const [isRecording, setIsRecording] = React.useState<boolean>(false);
@@ -16,18 +15,35 @@ function CameraComponent(props: any) {
 
 	const {
 		hasPermissions = false,
+		onVideoAdded = null,
 	} = props;
 
 	const onPress = async() => {
 		if (!isRecording) {
-			setIsRecording(true)
-			let video = await cameraRef.recordAsync();
-			console.log(video)
+			setIsRecording(true);
+			const video: any = await cameraRef.recordAsync();
+			onVideoAdded(video);
 		}
 		else {
 			setIsRecording(false);
 			cameraRef.stopRecording();
 		}
+	};
+
+	const renderStartRecordButton = () => {
+		return (
+			<View style={styles.recordStartButtonContainer}>
+				<View style={styles.recordStartButton} />
+			</View>
+		);
+	};
+
+	const renderEndRecordButton = () => {
+		return (
+			<View style={styles.recordEndButtonContainer}>
+				<View style={styles.recordEndButton} />
+			</View>
+		);
 	};
 
 	if (!hasPermissions) {
@@ -54,9 +70,7 @@ function CameraComponent(props: any) {
 			<View style={styles.cameraViewContainer}>
 				<View style={styles.cameraView}>
 					<TouchableOpacity style={{alignSelf: 'center'}} onPress={onPress}>
-						<View style={styles.recordButtonContainer}>
-							<View style={styles.recordButton} />
-						</View>
+						{ isRecording ? renderEndRecordButton() : renderStartRecordButton() }
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -65,15 +79,14 @@ function CameraComponent(props: any) {
 }
 
 class NewVideoScreen extends React.Component<any, any> {
-
-	private alert = AlertService;
-
 	constructor(props: any) {
 		super(props);
 
 		this.startVideoClick = this.startVideoClick.bind(this);
 		this.goBackClick = this.goBackClick.bind(this);
 		this.onChangeOrientationListener = this.onChangeOrientationListener.bind(this);
+		this.onVideoAdded = this.onVideoAdded.bind(this);
+		this.onNextClick = this.onNextClick.bind(this);
 
 		this.state = {
 			isLandscape: false,
@@ -115,12 +128,31 @@ class NewVideoScreen extends React.Component<any, any> {
 		}
 	}
 
+	onVideoAdded(video: any) {
+		this.setState(
+			{ showCamera: false },
+			() => this.props.actions.setVideoData(video)
+		);
+	}
+
 	goBackClick() {
+		this.props.navigation.navigate('Root');
+	}
+
+	onNextClick() {
 		this.props.navigation.navigate('Root');
 	}
 
 	startVideoClick() {
 		this.setState({ showCamera: true });
+	}
+
+	get isVideoEmpty(): boolean {
+		if (!this.props.video || !this.props.video.hasOwnProperty('uri')) {
+			return true;
+		}
+
+		return false;
 	}
 
 	renderBackLink() {
@@ -136,7 +168,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderStartRecordingButton() {
-		if (!this.state.isLandscape) {
+		if (!this.state.isLandscape || !this.isVideoEmpty) {
 			return null;
 		}
 
@@ -151,6 +183,25 @@ class NewVideoScreen extends React.Component<any, any> {
 					source={require('../assets/images/startvideo.png')}
 				/>
 			</TouchableOpacity>
+		);
+	}
+
+	renderVideoInfo() {
+		if (this.isVideoEmpty) {
+			return null;
+		}
+
+		return (
+			<View style={styles.videoInfo}>
+				<Text style={styles.videoInfoTitle}>
+					Видео создано
+				</Text>
+				<View style={styles.videoInfoNext}>
+					<Text style={styles.videoInfoNextLink} onPress={this.onNextClick}>
+						Далее&nbsp;{"\>"}
+					</Text>
+				</View>
+			</View>
 		);
 	}
 
@@ -183,6 +234,7 @@ class NewVideoScreen extends React.Component<any, any> {
 			return (
 				<CameraComponent
 					hasPermissions={hasPermissions}
+					onVideoAdded={this.onVideoAdded}
 				/>
 			);
 		}
@@ -197,6 +249,7 @@ class NewVideoScreen extends React.Component<any, any> {
 					<AppLogo />
 					{ this.renderBackLink() }
 					{ this.renderStartRecordingButton() }
+					{ this.renderVideoInfo() }
 					{ this.renderBanner() }
 				</View>
 			</ImageBackground>
@@ -205,7 +258,7 @@ class NewVideoScreen extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state: any) => ({
-	video: state.newVideoData.videos,
+	video: state.newVideoData.video,
 });
 
 const ActionCreators = Object.assign(
@@ -304,25 +357,74 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-evenly',
 		backgroundColor: 'transparent',
 	},
-	recordButtonContainer: {
+	recordStartButtonContainer: {
 		borderWidth: 2,
-		borderRadius:25,
+		borderRadius:30,
 		borderColor: 'red',
-		height: 50,
-		width: 50,
+		height: 65,
+		width: 65,
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: 30,
 		backgroundColor: 'transparent',
 	},
-	recordButton: {
+	recordStartButton: {
 		borderWidth: 2,
 		borderRadius:25,
 		borderColor: 'red',
-		height: 40, width:40,
+		height: 55,
+		width:55,
 		backgroundColor: 'red',
-	}
+	},
+	recordEndButtonContainer: {
+		borderWidth: 2,
+		borderRadius:3,
+		borderColor: 'red',
+		height: 65,
+		width: 65,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginBottom: 30,
+		backgroundColor: 'transparent',
+	},
+	recordEndButton: {
+		borderWidth: 2,
+		borderRadius:3,
+		borderColor: 'red',
+		height: 55,
+		width:55,
+		backgroundColor: 'red',
+	},
+	videoInfo: {
+		width: '90%',
+		backgroundColor: 'transparent',
+		borderRadius: 10,
+		marginTop: 150,
+	},
+	videoInfoTitle: {
+		marginLeft: 10,
+		marginRight: 10,
+		fontSize: 18,
+		fontWeight: 'bold',
+		marginTop: 10,
+		textAlign: 'center',
+		color: 'white',
+		textTransform: 'uppercase',
+	},
+	videoInfoNext: {
+		marginTop: 20,
+		backgroundColor: 'transparent',
+		marginBottom: 10
+
+	},
+	videoInfoNextLink: {
+		fontSize: 16,
+		color: '#ffffff',
+		textAlign: 'center',
+		textDecorationLine: 'underline',
+	},
 });
 
 const extendedComponent = WithAuth(NewVideoScreen);
