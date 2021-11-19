@@ -11,6 +11,7 @@ import { ColorSchemeName } from 'react-native';
 import ModalScreen from '../screens/ModalScreen';
 import MainScreen from '../screens/MainScreen';
 import NewVideoScreen from '../screens/NewVideoScreen';
+import SendAddedVideoScreen from '../screens/SendAddedVideoScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -40,6 +41,7 @@ function RootNavigator() {
             <Stack.Group>
                 <Stack.Screen name="Root" component={MainScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="NewVideo" component={NewVideoScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="SendAddedVideo" component={SendAddedVideoScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
             </Stack.Group>

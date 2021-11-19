@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import AuthService from '../../services/auth-service';
 
 const withAuth = (WrappedComponent: any) => {
-	class AuthenticationScreen extends Component {
+	class AuthenticationScreen extends Component<any, any> {
 
 		private auth = AuthService;
 
@@ -34,13 +34,11 @@ const withAuth = (WrappedComponent: any) => {
 				});
 			}
 			else {
-				// @ts-ignore
 				this.props.navigation.navigate('Login');
 			}
 		};
 
 		render() {
-			// @ts-ignore
 			if (!this.state.isAuthenticated) {
 				return null;
 			}

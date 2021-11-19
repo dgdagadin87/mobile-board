@@ -2,11 +2,12 @@ import * as React from 'react';
 import { ImageBackground, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { setVideoData } from '../redux/actions/newVideo';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
+import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import { AppLogo } from '../components/AppLogo';
 
 function CameraComponent(props: any) {
@@ -58,7 +59,7 @@ function CameraComponent(props: any) {
 					</Text>
 				</View>
 			</View>
-		)
+		);
 	}
 
 	return (
@@ -100,12 +101,10 @@ class NewVideoScreen extends React.Component<any, any> {
 		await this.setPermissions();
 
 		ScreenOrientation.addOrientationChangeListener(this.onChangeOrientationListener);
-		await ScreenOrientation.unlockAsync();
 	}
 
 	async componentWillUnmount() {
 		ScreenOrientation.removeOrientationChangeListeners();
-		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 	}
 
 	async setPermissions() {
@@ -140,7 +139,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	onNextClick() {
-		this.props.navigation.navigate('Root');
+		this.props.navigation.navigate('SendAddedVideo');
 	}
 
 	startVideoClick() {
@@ -206,7 +205,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderBanner() {
-		if (this.state.isLandscape) {
+		if (this.state.isLandscape || !this.isVideoEmpty) {
 			return null;
 		}
 
@@ -417,7 +416,6 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		backgroundColor: 'transparent',
 		marginBottom: 10
-
 	},
 	videoInfoNextLink: {
 		fontSize: 16,
@@ -427,5 +425,5 @@ const styles = StyleSheet.create({
 	},
 });
 
-const extendedComponent = WithAuth(NewVideoScreen);
+const extendedComponent = compose(WithScreenRotation, WithAuth)(NewVideoScreen);
 export default connect(mapStateToProps, mapDispatchToProps)(extendedComponent);
