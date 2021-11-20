@@ -110,8 +110,8 @@ class NewVideoScreen extends React.Component<any, any> {
 	async setPermissions() {
 		const { status: cameraStatus = null } = await Camera.getCameraPermissionsAsync();
 		const { status: microphoneStatus = null } = await Camera.getMicrophonePermissionsAsync();
-
-		this.setState({ hasPermissions: microphoneStatus === 'granted' && cameraStatus === 'granted' });
+		
+		this.setState({ hasPermissions:/* microphoneStatus === 'granted' &&*/ cameraStatus === 'granted' });
 	}
 
 	onChangeOrientationListener(event: any = {}) {
