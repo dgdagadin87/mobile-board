@@ -1,67 +1,117 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../components/Themed';
+import { StyleSheet, ImageBackground } from 'react-native';
+import { View } from '../components/Themed';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-
-import { Video } from 'expo-av'
-import VideoPlayer from 'expo-video-player'
-import {setVideoData} from "../redux/actions/newVideo";
-import WithScreenRotation from "../components/hocs/WithScreenRotation";
+import { setVideoName, setVideoDescription } from '../redux/actions/newVideo';
+import { Video } from 'expo-av';
+import VideoPlayer from 'expo-video-player';
+import WithKeyboardDismiss from "../components/hocs/WithKeyboardDismiss";
 import WithAuth from "../components/hocs/WithAuth";
+import { CustomTextInput } from '../components/CustomTextInput';
 
 
 class SendAddedVideoScreen extends React.Component<any, any> {
+
+  constructor(props: any) {
+    super(props);
+
+    this.changeVideoName = this.changeVideoName.bind(this);
+  }
+
+  changeVideoName(text: string) {
+		this.props.actions.setVideoName(text);
+  }
+  
+  changeVideoDescription(text: string) {
+		this.props.actions.setVideoDescription(text);
+	}
+
+  renderVideoPlayer() {
+      return (
+        <VideoPlayer
+          videoProps={{
+            shouldPlay: false,
+            resizeMode: Video.RESIZE_MODE_CONTAIN,
+            source: {
+              uri: this.props.video.uri,
+            },
+          }}
+          style={{
+            videoBackgroundColor: 'transparent',
+            height: 250,
+          }}
+        />
+      );
+  }
+
+  renderForm() {
+    return (
+      <View style={styles.form}>
+          <CustomTextInput
+						labelText="Как назовете?"
+						placeholderText="Название для видео"
+						isPassword={false}
+						value={this.props.videoName}
+						onChangeValue={this.changeVideoName}
+					/>
+      </View>
+    );
+  }
+
 	render() {
 		return (
-			<View style={{ width: 300, height: 300 }}>
-				<VideoPlayer
-					videoProps={{
-						shouldPlay: false,
-						resizeMode: Video.RESIZE_MODE_CONTAIN,
-						// ❗ source is required https://docs.expo.io/versions/latest/sdk/video/#props
-						source: this.props.video,
-					}}
-					style={{ width: 300, height: 300 }}
-					fullscreen={{
-						inFullscreen: false,}}
-				/>
-			</View>
+        <ImageBackground
+          source={require('../assets/images/auth_bg.png')}
+          resizeMode="cover"
+          style={styles.image}
+        >
+          <View style={styles.container}>
+              { this.renderVideoPlayer() }
+              { this.renderForm() }
+          </View>
+        </ImageBackground>
 
 		);
 	}
 }
 
 const mapStateToProps = (state: any) => ({
-	video: state.newVideoData.video,
+  video: state.newVideoData.video,
+  videoName: state.newVideoData.videoName,
+  videoDescription: state.newVideoData.videoDescription,
 });
 
 const ActionCreators = Object.assign(
-	{},
+  {},
+  { setVideoName, setVideoDescription }
 );
 const mapDispatchToProps = (dispatch: any) => ({
 	actions: bindActionCreators(ActionCreators, dispatch),
 });
 
 const styles = StyleSheet.create({
-	container: {
+  container: {
 		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center',
-		padding: 20,
+    backgroundColor: 'transparent',
+    paddingTop: 50,
+    paddingLeft: 10,
+    paddingRight: 10,
 	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
-	},
-	link: {
-		marginTop: 15,
-		paddingVertical: 15,
-	},
-	linkText: {
-		fontSize: 14,
-		color: '#2e78b7',
-	},
+	image: {
+		flex: 1,
+		justifyContent: "center",
+		width: '100%',
+		height: '100%'
+  },
+  video: {
+
+  },
+  form: {
+    marginTop: 30
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendAddedVideoScreen);
+const extendedComponent = compose(WithKeyboardDismiss, WithAuth)(SendAddedVideoScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(extendedComponent);

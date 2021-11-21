@@ -5,7 +5,9 @@ import {
 } from '../constants';
 
 const initialState = {
-    video: {}
+    video: {},
+    videoName: '',
+    videoDescription: ''
 };
 
 const newVideoReducer = (state = initialState, action: any) => {
@@ -14,6 +16,18 @@ const newVideoReducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 video: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_NAME:
+            return {
+                ...state,
+                videoName: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_DESCRIPTION:
+            return {
+                ...state,
+                videoDescription: action.payload
             };
 
         default:
