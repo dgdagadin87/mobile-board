@@ -1,117 +1,181 @@
 import * as React from 'react';
-import { StyleSheet, ImageBackground } from 'react-native';
-import { View } from '../components/Themed';
-import { connect } from 'react-redux';
+import { StyleSheet,
+    ImageBackground,
+    TouchableWithoutFeedback,
+    Keyboard
+} from 'react-native';
 import { bindActionCreators, compose } from 'redux';
-import { setVideoName, setVideoDescription } from '../redux/actions/newVideo';
+import { connect } from 'react-redux';
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
-import WithKeyboardDismiss from "../components/hocs/WithKeyboardDismiss";
-import WithAuth from "../components/hocs/WithAuth";
+import { View } from '../components/Themed';
+import { setVideoName, setVideoDescription } from '../redux/actions/newVideo';
+import FileService from '../services/file-service';
+import ApiService from '../services/api-service';
+import WithAuth from '../components/hocs/WithAuth';
 import { CustomTextInput } from '../components/CustomTextInput';
+import { CustomButton } from '../components/CustomButton';
 
+const DismissKeyboard = ({ children }: any) => (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        {children}
+    </TouchableWithoutFeedback>
+);
 
 class SendAddedVideoScreen extends React.Component<any, any> {
+    private api = ApiService;
+    private file = FileService;
 
-  constructor(props: any) {
-    super(props);
+    constructor(props: any) {
+        super(props);
 
-    this.changeVideoName = this.changeVideoName.bind(this);
-  }
+        this.changeVideoName = this.changeVideoName.bind(this);
+        this.changeVideoDescription = this.changeVideoDescription.bind(this);
+        this.sendOnModeration = this.sendOnModeration.bind(this);
+    }
 
-  changeVideoName(text: string) {
-		this.props.actions.setVideoName(text);
-  }
-  
-  changeVideoDescription(text: string) {
-		this.props.actions.setVideoDescription(text);
-	}
+    public get isButtonDisabled(): boolean {
+        return !this.props.videoName;
+    }
 
-  renderVideoPlayer() {
-      return (
-        <VideoPlayer
-          videoProps={{
-            shouldPlay: false,
-            resizeMode: Video.RESIZE_MODE_CONTAIN,
-            source: {
-              uri: this.props.video.uri,
-            },
-          }}
-          style={{
-            videoBackgroundColor: 'transparent',
-            height: 250,
-          }}
-        />
-      );
-  }
+    getDateString(): string {
+        return '2020-04-30T00:00:00';
+        const now: Date = new Date();
+        return now.toLocaleDateString() + '-' + now.toTimeString();
+    }
 
-  renderForm() {
-    return (
-      <View style={styles.form}>
-          <CustomTextInput
-						labelText="Как назовете?"
-						placeholderText="Название для видео"
-						isPassword={false}
-						value={this.props.videoName}
-						onChangeValue={this.changeVideoName}
-					/>
-      </View>
-    );
-  }
+    async sendOnModeration(): Promise<void> {
+        const dateParam: string = this.getDateString();
+        //const fileParam: string = await this.file.getFileContent(this.props.video.uri);
 
-	render() {
-		return (
-        <ImageBackground
-          source={require('../assets/images/auth_bg.png')}
-          resizeMode="cover"
-          style={styles.image}
-        >
-          <View style={styles.container}>
-              { this.renderVideoPlayer() }
-              { this.renderForm() }
-          </View>
-        </ImageBackground>
+        try {
+            const response: any = await this.api.uploadVideo(this.props.videoName, this.props.videoDescription, dateParam, this.props.video.uri);
+            console.log('RESP', response);
+        }
+        catch(err) {
+            console.log('error111: ', err);
+        }
+    }
 
-		);
-	}
+    changeVideoName(text: string) {
+        this.props.actions.setVideoName(text);
+    }
+
+    changeVideoDescription(text: string) {
+        this.props.actions.setVideoDescription(text);
+    }
+
+    renderVideoPlayer() {
+        return null
+        if (!this.props.video) {
+            return null;
+        }
+
+        return (
+            <VideoPlayer
+                videoProps={{
+                    shouldPlay: false,
+                    resizeMode: Video.RESIZE_MODE_CONTAIN,
+                    source: {
+                        uri: this.props.video.uri,
+                    },
+                }}
+                style={{
+                    videoBackgroundColor: 'transparent',
+                    height: 250,
+                }}
+            />
+        );
+    }
+
+    renderForm() {
+        return (
+            <View style={styles.form}>
+                <CustomTextInput
+                    labelText="Как назовете?"
+                    placeholderText="Название для видео"
+                    isPassword={false}
+                    value={this.props.videoName}
+                    onChangeValue={this.changeVideoName}
+                    customLabelStyles={{ marginLeft: 0 }}
+                    customInputStyles={{ marginLeft: 0, width: '100%' }}
+                />
+                <CustomTextInput
+                    isTextarea={true}
+                    labelText="О чем рассказываете?"
+                    placeholderText=""
+                    isPassword={false}
+                    value={this.props.videoDescription}
+                    onChangeValue={this.changeVideoDescription}
+                    customLabelStyles={{ marginLeft: 0 }}
+                    customInputStyles={{ marginLeft: 0, width: '100%' }}
+                />
+                <CustomButton
+                    customStyles={{ width: '100%', marginLeft: 0 }}
+                    buttonText="Отправить на модерацию"
+                    isDisabled={this.isButtonDisabled}
+                    onButtonClick={this.sendOnModeration}
+                />
+            </View>
+        );
+    }
+
+    render() {
+        return (
+            <DismissKeyboard>
+                <ImageBackground
+                    source={require('../assets/images/auth_bg.png')}
+                    resizeMode="cover"
+                    style={styles.image}
+                >
+                    <View style={styles.container}>
+                        { this.renderVideoPlayer() }
+                        { this.renderForm() }
+                    </View>
+                </ImageBackground>
+            </DismissKeyboard>
+        );
+    }
 }
 
 const mapStateToProps = (state: any) => ({
-  video: state.newVideoData.video,
-  videoName: state.newVideoData.videoName,
-  videoDescription: state.newVideoData.videoDescription,
+    video: state.newVideoData.video,
+    videoName: state.newVideoData.videoName,
+    videoDescription: state.newVideoData.videoDescription,
 });
 
 const ActionCreators = Object.assign(
-  {},
-  { setVideoName, setVideoDescription }
+{},
+{ setVideoName, setVideoDescription }
 );
 const mapDispatchToProps = (dispatch: any) => ({
-	actions: bindActionCreators(ActionCreators, dispatch),
+    actions: bindActionCreators(ActionCreators, dispatch),
 });
 
 const styles = StyleSheet.create({
-  container: {
-		flex: 1,
-		alignItems: 'center',
-    backgroundColor: 'transparent',
-    paddingTop: 50,
-    paddingLeft: 10,
-    paddingRight: 10,
-	},
-	image: {
-		flex: 1,
-		justifyContent: "center",
-		width: '100%',
-		height: '100%'
-  },
-  video: {
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingTop: 50,
+        paddingLeft: 20,
+        paddingRight: 20,
+    },
+    image: {
+        flex: 1,
+        justifyContent: "center",
+        width: '100%',
+        height: '100%'
+    },
+    video: {
 
-  },
-  form: {
-    marginTop: 30
-  }
+    },
+    form: {
+        marginTop: 30,
+        backgroundColor: 'transparent',
+        width: '100%'
+    }
 });
 
-const extendedComponent = compose(WithKeyboardDismiss, WithAuth)(SendAddedVideoScreen);
+const extendedComponent = compose(WithAuth)(SendAddedVideoScreen);
 export default connect(mapStateToProps, mapDispatchToProps)(extendedComponent);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TouchableWithoutFeedback, Keyboard, } from 'react-native';
 
 const DismissKeyboard = ({ children }: any) => (
-	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}  accessible={false}>
 		{children}
 	</TouchableWithoutFeedback>
 );

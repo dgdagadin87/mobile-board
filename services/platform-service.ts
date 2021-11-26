@@ -6,6 +6,10 @@ class PlatformService {
         return Platform.OS === 'web';
     }
 
+    public get isIos(): boolean {
+        return Platform.OS === 'ios';
+    }
+
     public get width(): number {
         return Dimensions.get('window').width;
     }
