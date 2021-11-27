@@ -35,7 +35,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     public get isButtonDisabled(): boolean {
-        return !this.props.videoName;
+        return !this.props.videoName || !this.props.videoDescription;
     }
 
     getDateString(): string {
@@ -66,25 +66,26 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     renderVideoPlayer() {
-        return null
         if (!this.props.video) {
             return null;
         }
 
         return (
-            <VideoPlayer
-                videoProps={{
-                    shouldPlay: false,
-                    resizeMode: Video.RESIZE_MODE_CONTAIN,
-                    source: {
-                        uri: this.props.video.uri,
-                    },
-                }}
-                style={{
-                    videoBackgroundColor: 'transparent',
-                    height: 250,
-                }}
-            />
+            <View style={styles.video}>
+                <VideoPlayer
+                    videoProps={{
+                        shouldPlay: false,
+                        resizeMode: Video.RESIZE_MODE_CONTAIN,
+                        source: {
+                            uri: this.props.video.uri,
+                        },
+                    }}
+                    style={{
+                        videoBackgroundColor: 'transparent',
+                        height: 250,
+                    }}
+                />
+            </View>
         );
     }
 
@@ -123,16 +124,16 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     render() {
         return (
             <DismissKeyboard>
+              <View style={styles.container}>
                 <ImageBackground
                     source={require('../assets/images/auth_bg.png')}
                     resizeMode="cover"
                     style={styles.image}
                 >
-                    <View style={styles.container}>
-                        { this.renderVideoPlayer() }
-                        { this.renderForm() }
-                    </View>
+                    { this.renderVideoPlayer() }
+                    { this.renderForm() }
                 </ImageBackground>
+              </View>
             </DismissKeyboard>
         );
     }
@@ -154,23 +155,23 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: 'transparent',
-        paddingTop: 50,
-        paddingLeft: 20,
-        paddingRight: 20,
+      flex: 1,
+      justifyContent: 'center',
     },
     image: {
-        flex: 1,
-        justifyContent: "center",
-        width: '100%',
-        height: '100%'
+       flex: 1,
+       width: '100%',
+       height: '100%'
     },
     video: {
-
+        paddingTop: 50,
+        paddingRight: 20,
+        paddingLeft: 20,
+        backgroundColor: 'transparent'
     },
     form: {
+        paddingLeft: 20,
+        paddingRight: 20,
         marginTop: 30,
         backgroundColor: 'transparent',
         width: '100%'
