@@ -47,7 +47,19 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         this.sendOnModeration = this.sendOnModeration.bind(this);
     }
 
-    public get isButtonDisabled(): boolean {
+    get fullDescription(): string {
+        const {
+            filmName = '',
+            efirDate = '',
+            videoDescription = '',
+            countryCityFrom = '',
+            activityType = ''
+        } = this.props;
+
+        return filmName + ', ' + efirDate + ', ' + videoDescription + ',' + countryCityFrom + ', ' + activityType;
+    }
+
+    get isButtonDisabled(): boolean {
         return !this.props.videoName ||
                !this.props.videoDescription ||
                !this.props.filmName ||
@@ -80,7 +92,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         const dateParam: string = this.getDateString();
 
         try {
-            const response: any = await this.api.uploadVideo(this.props.videoName, this.props.videoDescription, dateParam, this.props.video.uri);
+            const response: any = await this.api.uploadVideo(this.props.videoName, this.fullDescription, dateParam, this.props.video.uri);
             if (response.success) {
                 this.alert.alert('Успех', 'Видео успешно отправлено на модерацию');
             }
