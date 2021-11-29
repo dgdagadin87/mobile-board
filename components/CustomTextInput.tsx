@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
+import { MaskedTextInput } from "react-native-mask-text";
 import { Text } from './Themed';
 import platform from '../services/platform-service';
 
@@ -9,6 +10,7 @@ export type CustomTextInputProps = {
 	onChangeValue: any,
 	isPassword: boolean,
 	placeholderText: string,
+	inputMask?: string,
 	isTextarea?: boolean,
 	numOfStrings?: number,
 	customLabelStyles?: { [key: string]: string | number },
@@ -21,6 +23,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 		customLabelStyles = null,
 		isTextarea = false,
 		numOfStrings = 1,
+		inputMask = false,
 	} = props;
 
 	const getInputStyles = (): any => {
@@ -37,11 +40,33 @@ export function CustomTextInput(props: CustomTextInputProps) {
 		return resultStyles;
 	}
 
+	const renderLabel = () => (
+		<Text
+			style={ customLabelStyles ? [styles.label, customLabelStyles] : styles.label }
+		>
+			{props.labelText}
+		</Text>
+	);
+
+	if (inputMask) {
+		return (
+			<>
+				{ renderLabel() }
+				<MaskedTextInput
+					mask={inputMask}
+					style={getInputStyles()}
+					value={props.value}
+					placeholder={props.placeholderText}
+					onChangeText={(text) => props.onChangeValue(text)}
+				/>
+			</>
+
+		);
+	}
+
   	return (
   		<>
-			<Text
-				style={ customLabelStyles ? [styles.label, customLabelStyles] : styles.label }
-			>{props.labelText}</Text>
+			{ renderLabel() }
 			<TextInput
 				multiline={isTextarea}
 				numberOfLines={isTextarea ? 5 : 1}

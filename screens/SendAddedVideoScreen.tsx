@@ -174,6 +174,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
                 />
                 <CustomTextInput
+                    inputMask="99.99.9999"
                     labelText="Дата эфира"
                     placeholderText="дд.мм.гггг"
                     isPassword={false}
