@@ -1,28 +1,7 @@
 import axios from 'axios';
 import AuthService from './auth-service';
-import base64 from 'react-native-base64'
 
 const API_BASE_URL: string = 'https://nvv.elastoo.com/api/';
-
-/*function dataURItoBlob(dataURI: any) {
-	// convert base64/URLEncoded data component to raw binary data held in a string
-	let byteString;
-	if (dataURI.split(',')[0].indexOf('base64') >= 0)
-		byteString = base64.decode(dataURI.split(',')[1]);
-	else
-		byteString = unescape(dataURI.split(',')[1]);
-
-	// separate out the mime component
-	let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-	// write the bytes of the string to a typed array
-	let ia = new Uint8Array(byteString.length);
-	for (let i = 0; i < byteString.length; i++) {
-		ia[i] = byteString.charCodeAt(i);
-	}
-
-	return new Blob([ia], {type:mimeString});
-}*/
 
 class ApiService {
 	private authService = AuthService;
