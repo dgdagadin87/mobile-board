@@ -13,7 +13,7 @@ const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
 
 	const { isRecording = true } = props;
-  
+
 	React.useEffect(() => {
 		let interval: any = null;
 		if (isRecording) {
@@ -26,7 +26,7 @@ const VideoTimer = (props: any) => {
 		}
 		return () => clearInterval(interval);
 	}, [seconds]);
-  
+
 	return (
 		<View style={styles.timerView}>
 			<Text style={styles.timerText}>
@@ -87,7 +87,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	async onStartVideoClick() {
-		
+
 		if (!this.state.isRecording) {
 			this.setState(
 				{ isRecording: true },
@@ -214,6 +214,7 @@ class NewVideoScreen extends React.Component<any, any> {
 		return (
 			<Camera
 				style={{ flex: 1 }}
+				ratio={'16:9'}
 				type={this.state.cameraType}
 				ref={ref => this.cameraRef = ref}
 			>
