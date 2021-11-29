@@ -1,13 +1,21 @@
 import {
     NEW_VIDEO_SET_VIDEO_DATA,
     SEND_ADDED_VIDEO_NAME,
-    SEND_ADDED_VIDEO_DESCRIPTION
+    SEND_ADDED_VIDEO_DESCRIPTION,
+    SEND_ADDED_VIDEO_FILM_NAME,
+    SEND_ADDED_VIDEO_EFIR_DATE,
+    SEND_ADDED_VIDEO_COUNTRY_CITY_FROM,
+    SEND_ADDED_VIDEO_ACTIVITY_TYPE,
 } from '../constants';
 
 const initialState = {
     video: {},
     videoName: '',
-    videoDescription: ''
+    filmName: '',
+    efirDate: '',
+    videoDescription: '',
+    countryCityFrom: '',
+    activityType: '',
 };
 
 const newVideoReducer = (state = initialState, action: any) => {
@@ -28,6 +36,30 @@ const newVideoReducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 videoDescription: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_FILM_NAME:
+            return {
+                ...state,
+                filmName: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_EFIR_DATE:
+            return {
+                ...state,
+                efirDate: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_COUNTRY_CITY_FROM:
+            return {
+                ...state,
+                countryCityFrom: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_ACTIVITY_TYPE:
+            return {
+                ...state,
+                activityType: action.payload
             };
 
         default:

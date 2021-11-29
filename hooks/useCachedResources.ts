@@ -2,20 +2,20 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
-import * as Permissions from 'expo-permissions';
+import { Camera } from 'expo-camera';
 
-async function checkMultiPermissions(): Promise<void> {
-	const { status: cameraStatus1 } = await Permissions.getAsync(Permissions.CAMERA);
+export async function checkMultiPermissions(): Promise<void> {
+	const { status: cameraStatus1 } = await Camera.getCameraPermissionsAsync();
 	if (cameraStatus1 !== 'granted') {
-		const { status: cameraStatus2 } = await Permissions.askAsync(Permissions.CAMERA);
+		const { status: cameraStatus2 } = await Camera.requestCameraPermissionsAsync();
 		if (cameraStatus2 !== 'granted') {
 			alert('Нет доступа к камере');
 		}
 	}
 
-	const { status: microStatus1 } = await Permissions.getAsync(Permissions.AUDIO_RECORDING);
+	const { status: microStatus1 } = await Camera.getMicrophonePermissionsAsync();
 	if (microStatus1 !== 'granted') {
-		const { status: microStatus2 } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+		const { status: microStatus2 } = await Camera.requestMicrophonePermissionsAsync();
 		if (microStatus2 !== 'granted') {
 			alert('Нет доступа к микрофону');
 		}

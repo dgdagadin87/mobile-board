@@ -4,12 +4,13 @@ import { Text } from './Themed';
 import platform from '../services/platform-service';
 
 export type CustomTextInputProps = {
-	isTextarea?: boolean;
 	value: string,
 	labelText: string,
 	onChangeValue: any,
 	isPassword: boolean,
 	placeholderText: string,
+	isTextarea?: boolean,
+	numOfStrings?: number,
 	customLabelStyles?: { [key: string]: string | number },
 	customInputStyles?: { [key: string]: string | number },
 };
@@ -19,6 +20,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 		customInputStyles = null,
 		customLabelStyles = null,
 		isTextarea = false,
+		numOfStrings = 1,
 	} = props;
 
 	const getInputStyles = (): any => {
@@ -29,7 +31,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 		}
 
 		if (isTextarea && platform.isIos ) {
-			resultStyles.push({ height: 125 });
+			resultStyles.push({ height: numOfStrings*25 });
 		}
 
 		return resultStyles;
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		borderWidth: 1,
 		borderColor: '#999999',
-		borderStyle: 'solid'
+		borderStyle: 'solid',
+		borderRadius: 3
 	},
 });

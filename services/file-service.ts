@@ -11,6 +11,10 @@ class FileService {
 		const fileContent: string = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
 		return fileContent;
 	}
+
+	deleteFile(): void {
+
+	}
 }
 
 const fileService: FileService = new FileService();

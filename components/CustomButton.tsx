@@ -19,7 +19,8 @@ export function CustomButton(props: CustomButtonProps) {
 		marginTop: 15,
 		elevation:3,
 		width: '70%',
-		marginLeft: '15%'
+		marginLeft: '15%',
+		borderRadius: 3
 	};
 
   	return (

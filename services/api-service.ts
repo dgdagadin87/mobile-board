@@ -10,7 +10,6 @@ class ApiService {
 		return new Promise<void>((resolve, reject) => {
             axios.post(API_BASE_URL + url, data, params)
 				.then((response: any) => {
-					console.log(response)
 					const data: any = response.data;
 
 					if (!data) {
@@ -37,14 +36,21 @@ class ApiService {
 		});
 	}
 
-	public async uploadVideo(name: string, description: string, date: string, file: string): Promise<any> {
+	public async uploadVideo(name: string, description: string, date: string, filePath: string): Promise<any> {
+		const extension: string | any = filePath.split('.').pop();
 		const headers = await this.getHeaders(true);
 		const formData: any = new global.FormData();
 		formData.append('name', name);
 		formData.append('description', description);
 		formData.append('date', date);
-
-		formData.append('file', { name: 'file.mov', uri: file, type: 'video/mov' });
+		formData.append(
+			'file',
+			{
+				uri: filePath,
+				name: 'file.' + extension,
+				type: 'video/' + extension
+			}
+		);
 
 		return this.post('videos/sendvideo/', formData, { headers });
 	}
@@ -67,10 +73,3 @@ class ApiService {
 
 const apiService: ApiService = new ApiService();
 export default apiService;
-
-/*
-*  {loc: ["body", "file"], msg: "field required", type: "value_error.missing"}
-loc: ["body", "file"]
-msg: "field required"
-type: "value_error.missing"
-* */

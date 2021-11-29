@@ -1,4 +1,12 @@
-import { NEW_VIDEO_SET_VIDEO_DATA, SEND_ADDED_VIDEO_NAME, SEND_ADDED_VIDEO_DESCRIPTION } from '../constants';
+import {
+    NEW_VIDEO_SET_VIDEO_DATA,
+    SEND_ADDED_VIDEO_NAME,
+    SEND_ADDED_VIDEO_DESCRIPTION,
+    SEND_ADDED_VIDEO_FILM_NAME,
+    SEND_ADDED_VIDEO_EFIR_DATE,
+    SEND_ADDED_VIDEO_COUNTRY_CITY_FROM,
+    SEND_ADDED_VIDEO_ACTIVITY_TYPE,
+} from '../constants';
 
 export function setVideoData(videoData: any) {
     return {
@@ -20,3 +28,31 @@ export function setVideoDescription(description: string) {
         payload: description
     };
 };
+
+export function setFilmName(filmName: string) {
+    return {
+        type: SEND_ADDED_VIDEO_FILM_NAME,
+        payload: filmName
+    };
+}
+
+export function setEfirDate(efirDate: string) {
+    return {
+        type: SEND_ADDED_VIDEO_EFIR_DATE,
+        payload: efirDate
+    };
+}
+
+export function setCountryCityFrom(countryCityFrom: string) {
+    return {
+        type: SEND_ADDED_VIDEO_COUNTRY_CITY_FROM,
+        payload: countryCityFrom
+    };
+}
+
+export function setActivityType(activityType: string) {
+    return {
+        type: SEND_ADDED_VIDEO_ACTIVITY_TYPE,
+        payload: activityType
+    };
+}
