@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { MaskedTextInput } from "react-native-mask-text";
-import { Text } from './Themed';
+import { Text, View } from './Themed';
 import platform from '../services/platform-service';
 
 export type CustomTextInputProps = {
@@ -50,7 +50,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 
 	if (inputMask) {
 		return (
-			<>
+			<View style={{ backgroundColor: 'transparent' }}>
 				{ renderLabel() }
 				<MaskedTextInput
 					mask={inputMask}
@@ -59,13 +59,12 @@ export function CustomTextInput(props: CustomTextInputProps) {
 					placeholder={props.placeholderText}
 					onChangeText={(text) => props.onChangeValue(text)}
 				/>
-			</>
-
+			</View>
 		);
 	}
 
   	return (
-  		<>
+  		<View style={{ backgroundColor: 'transparent' }}>
 			{ renderLabel() }
 			<TextInput
 				multiline={isTextarea}
@@ -76,7 +75,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 				value={props.value}
 				placeholder={props.placeholderText}
 			/>
-		</>
+		</View>
 	);
 }
 

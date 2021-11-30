@@ -2,8 +2,6 @@ import * as React from 'react';
 import {
 	StyleSheet,
 	ImageBackground,
-	TouchableWithoutFeedback,
-	Keyboard,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -17,12 +15,12 @@ import {
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
+import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
 import { AppLogo } from '../components/AppLogo';
 import { CustomTextInput } from '../components/CustomTextInput';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
-import PlatformService from '../services/platform-service';
 
 
 type Props = {
@@ -36,17 +34,9 @@ type Props = {
     navigation: any,
 };
 
-const DismissKeyboard = ({ children }: any) => (
-	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-		{children}
-	</TouchableWithoutFeedback>
-);
-
 class RegisterScreen extends React.Component<Props> {
-
 	private api = ApiService;
 	private alert = AlertService;
-	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
@@ -191,9 +181,9 @@ class RegisterScreen extends React.Component<Props> {
 
 	render() {
 		return (
-			this.platform.isWeb ?
-				this.renderMain() :
-				<DismissKeyboard>{this.renderMain()}</DismissKeyboard>
+			<CorrectKeyboardContainer>
+				{this.renderMain()}
+			</CorrectKeyboardContainer>
 		);
   	}
 };

@@ -2,9 +2,8 @@ import * as React from 'react';
 import {
     StyleSheet,
     ImageBackground,
-    TouchableWithoutFeedback,
-    Keyboard,
     ScrollView,
+    KeyboardAvoidingView
 } from 'react-native';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
@@ -22,14 +21,9 @@ import {
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
 import WithAuth from '../components/hocs/WithAuth';
+import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomTextInput } from '../components/CustomTextInput';
 import { CustomButton } from '../components/CustomButton';
-
-const DismissKeyboard = ({ children }: any) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        {children}
-    </TouchableWithoutFeedback>
-);
 
 class SendAddedVideoScreen extends React.Component<any, any> {
     private api = ApiService;
@@ -134,6 +128,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         return (
             <View style={styles.video}>
                 <VideoPlayer
+                    defaultControlsVisible={true}
                     videoProps={{
                         shouldPlay: false,
                         resizeMode: Video.RESIZE_MODE_CONTAIN,
@@ -224,11 +219,11 @@ class SendAddedVideoScreen extends React.Component<any, any> {
 
     render() {
         return (
-            <DismissKeyboard>
-              <ScrollView
-                  style={styles.container}
-                  contentContainerStyle={{ justifyContent: 'center', flexGrow: 1 }}
-              >
+            <CorrectKeyboardContainer>
+                <ScrollView
+                    style={styles.container}
+                    contentContainerStyle={{ justifyContent: 'center', flexGrow: 1 }}
+                >
                 <ImageBackground
                     source={require('../assets/images/auth_bg.png')}
                     resizeMode="cover"
@@ -237,8 +232,8 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     { this.renderVideoPlayer() }
                     { this.renderForm() }
                 </ImageBackground>
-              </ScrollView>
-            </DismissKeyboard>
+                </ScrollView>
+            </CorrectKeyboardContainer>
         );
     }
 }

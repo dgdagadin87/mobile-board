@@ -2,17 +2,15 @@ import * as React from 'react';
 import {
 	StyleSheet,
 	ImageBackground,
-	TouchableWithoutFeedback,
-	Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
 import StorageService from '../services/storage-service';
 import AlertService from '../services/alert-service';
-import PlatformService from '../services/platform-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
+import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
 import { CustomTextInput } from '../components/CustomTextInput';
 import { AppLogo } from '../components/AppLogo';
@@ -24,17 +22,10 @@ type Props = {
 	navigation: any,
 };
 
-const DismissKeyboard = ({ children }: any) => (
-	<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-		{children}
-	</TouchableWithoutFeedback>
-);
-
 class LoginScreen extends React.Component<Props> {
 	private api = ApiService;
 	private storage = StorageService;
 	private alert = AlertService;
-	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
@@ -105,7 +96,9 @@ class LoginScreen extends React.Component<Props> {
 						onButtonClick={this.onLogin}
 					/>
 
-					<Text style={styles.forgotLink}>Забыли пароль?</Text>
+					<View style={{ backgroundColor: 'transparent' }}>
+						<Text style={styles.forgotLink}>Забыли пароль?</Text>
+					</View>
 
 					<View style={styles.bottom}>
 						<View style={styles.haveNoAccount}>
@@ -125,9 +118,9 @@ class LoginScreen extends React.Component<Props> {
 
 	render() {
 		return (
-			this.platform.isWeb ?
-				this.renderMain() :
-				<DismissKeyboard>{this.renderMain()}</DismissKeyboard>
+			<CorrectKeyboardContainer>
+				{this.renderMain()}
+			</CorrectKeyboardContainer>
 		);
 	}
 };
