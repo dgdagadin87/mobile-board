@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AuthService from './auth-service';
+import AlertService from './alert-service';
 
 const API_BASE_URL: string = 'https://nvv.elastoo.com/api/';
 
@@ -18,7 +19,12 @@ class ApiService {
 
 					resolve(data);
 				})
-				.catch((error) => reject(error));
+				.catch((error) => {
+					console.log('it is error', error);
+					const errorString: string = typeof error === 'string' ? error : JSON.stringify(error);
+					AlertService.alert('Error', errorString);
+					reject(error);
+				});
         });
 	}
 
