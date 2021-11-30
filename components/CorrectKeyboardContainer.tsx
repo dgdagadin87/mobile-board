@@ -4,7 +4,7 @@ import PlatformService from '../services/platform-service';
 
 const CorrectKeyboardContainer = ({ children }: any) => (
     <KeyboardAvoidingView
-        behavior={PlatformService.isIos ? 'height' : 'height'}
+        behavior={PlatformService.isIos ? 'padding' : 'height'}
         style={{ flex: 1 }}
     >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

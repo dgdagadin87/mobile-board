@@ -3,7 +3,6 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    KeyboardAvoidingView
 } from 'react-native';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';

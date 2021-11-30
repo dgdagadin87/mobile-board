@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -190,7 +190,7 @@ class NewVideoScreen extends React.Component<any, any> {
 					Поменять камеру
 				</Text>
 			</TouchableOpacity>
-		)
+		);
 	}
 
 	render() {
@@ -250,11 +250,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		width: '100%',
 		height: '100%'
-	},
-	startVideoButton: {
-		position: 'absolute',
-		top: '50%',
-		right: '15%'
 	},
 	banner: {
 		width: '90%',
@@ -319,8 +314,8 @@ const styles = StyleSheet.create({
 	},
 	flipButton: {
 		position: 'absolute',
-		top: '55%',
-		left: '15%',
+		top: '15%',
+		right: '3%',
 		backgroundColor: '#fff',
 		padding: 7,
 		borderRadius: 5
@@ -328,6 +323,11 @@ const styles = StyleSheet.create({
 	flipText: {
 		textTransform: 'uppercase',
 		fontSize: 16,
+	},
+	startVideoButton: {
+		position: 'absolute',
+		top: '70%',
+		right: '3%'
 	},
 	timerView: {
 		position: 'absolute',
