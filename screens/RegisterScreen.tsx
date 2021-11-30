@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
 	},
 	haveAccount: {
 		backgroundColor: 'transparent',
-		paddingBottom: 15
+		paddingBottom: 25
 	},
 	haveAccountText: {
 		color: '#333',
