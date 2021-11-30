@@ -21,7 +21,7 @@ import { AppLogo } from '../components/AppLogo';
 import { CustomTextInput } from '../components/CustomTextInput';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
-
+import PlatformService from '../services/platform-service';
 
 type Props = {
     login: string,
@@ -37,6 +37,7 @@ type Props = {
 class RegisterScreen extends React.Component<Props> {
 	private api = ApiService;
 	private alert = AlertService;
+	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
@@ -180,6 +181,10 @@ class RegisterScreen extends React.Component<Props> {
 	}
 
 	render() {
+		if (this.platform.isWeb) {
+			return this.renderMain();
+		}
+
 		return (
 			<CorrectKeyboardContainer>
 				{this.renderMain()}

@@ -6,6 +6,31 @@ const API_BASE_URL: string = 'https://nvv.elastoo.com/api/';
 
 class ApiService {
 	private authService = AuthService;
+	private alertService = AlertService;
+
+	private get(url: string, headers: any): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			axios({
+				url: API_BASE_URL + url,
+				headers: headers
+			})
+				.then((response: any) => {
+					const data: any = response.data;
+
+					if (!data) {
+						reject();
+					}
+
+					resolve(data);
+				})
+				.catch((error) => {
+					console.log('it is error', error);
+					const errorString: string = typeof error === 'string' ? error : JSON.stringify(error);
+					this.alertService.alert('Error', errorString);
+					reject(error);
+				});
+		});
+	}
 
 	private post(url: string, data: any, params: any = {}): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
@@ -22,17 +47,22 @@ class ApiService {
 				.catch((error) => {
 					console.log('it is error', error);
 					const errorString: string = typeof error === 'string' ? error : JSON.stringify(error);
-					AlertService.alert('Error', errorString);
+					this.alertService.alert('Error', errorString);
 					reject(error);
 				});
         });
 	}
 
-	public auth(login: string, password: string): Promise<void> {
+	public async getVideos(): Promise<any> {
+		const headers = await this.getHeaders(true);
+		return this.get('videos/listvideos/', headers);
+	}
+
+	public async auth(login: string, password: string): Promise<void> {
 		return this.post('account/auth/', { email: login, password: password });
 	}
 
-	public register(name: string, password: string, username: string, email: string): Promise<void> {
+	public async register(name: string, password: string, username: string, email: string): Promise<void> {
 		return this.post('account/registration/', {
 			email, password,
 			username, name,

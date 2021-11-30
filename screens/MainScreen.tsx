@@ -11,14 +11,26 @@ import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { setUserData, setVideosList } from '../redux/actions/main';
+import { VideoItem, VideoCdn } from '../redux/reducers/mainReducer';
 import AuthService from '../services/auth-service';
+import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
 import PlatformService from '../services/platform-service';
 
 const platform = PlatformService;
 
-class MainScreen extends React.Component<any> {
+const VideoComponent = function(props : VideoItem) {
+	return (
+		<View style={{}}>
+			<Text style={{}}>
+				{ props.name }
+			</Text>
+		</View>
+	);
+}
 
+class MainScreen extends React.Component<any> {
+	private api = ApiService;
 	private auth = AuthService;
 	private alert = AlertService;
 
@@ -32,6 +44,7 @@ class MainScreen extends React.Component<any> {
 
 	async componentDidMount(): Promise<void> {
 		await this.setUserData();
+		await this.setVideos();
 	}
 
 	onHelpClick() {
@@ -54,6 +67,16 @@ class MainScreen extends React.Component<any> {
 		this.props.actions.setUserData(userData);
 	}
 
+	async setVideos(): Promise<void> {
+		try {
+			const response: VideoItem[] = await this.api.getVideos();
+			this.props.setVideosList(response);
+		}
+		catch(error) {
+			this.alert.alert('Ошибка', 'Что-то пошло не так');
+		}
+	}
+
 	renderEmptyVideoMessage() {
 		return (
 			<View style={styles.emptyContainer}>
@@ -69,6 +92,10 @@ class MainScreen extends React.Component<any> {
 				</Text>
 			</View>
 		);
+	}
+
+	renderVideoList() {
+
 	}
 
 	render() {
@@ -116,7 +143,7 @@ class MainScreen extends React.Component<any> {
 					</TouchableOpacity>
 				</View>
 
-				{ videos.length < 1 ? this.renderEmptyVideoMessage() : null }
+				{ videos.length < 1 ? this.renderEmptyVideoMessage() : this.renderVideoList() }
 			</ImageBackground>
 		);
 	}

@@ -19,6 +19,7 @@ import {
 } from '../redux/actions/newVideo';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
+import PlatformService from '../services/platform-service';
 import WithAuth from '../components/hocs/WithAuth';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomTextInput } from '../components/CustomTextInput';
@@ -27,6 +28,7 @@ import { CustomButton } from '../components/CustomButton';
 class SendAddedVideoScreen extends React.Component<any, any> {
     private api = ApiService;
     private alert = AlertService;
+    private platform = PlatformService;
 
     constructor(props: any) {
         super(props);
@@ -216,25 +218,38 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         );
     }
 
-    render() {
+    renderMain() {
         return (
             <CorrectKeyboardContainer>
                 <ScrollView
                     style={styles.container}
                     contentContainerStyle={{ justifyContent: 'center', flexGrow: 1 }}
                 >
-                <ImageBackground
-                    source={require('../assets/images/auth_bg.png')}
-                    resizeMode="cover"
-                    style={styles.image}
-                >
-                    { this.renderVideoPlayer() }
-                    { this.renderForm() }
-                </ImageBackground>
+                    <ImageBackground
+                        source={require('../assets/images/auth_bg.png')}
+                        resizeMode="cover"
+                        style={styles.image}
+                    >
+                        { this.renderVideoPlayer() }
+                        { this.renderForm() }
+                    </ImageBackground>
                 </ScrollView>
             </CorrectKeyboardContainer>
         );
     }
+
+    render() {
+        if (this.platform.isWeb) {
+            return this.renderMain();
+        }
+
+        return (
+            <CorrectKeyboardContainer>
+                {this.renderMain()}
+            </CorrectKeyboardContainer>
+        );
+    }
+
 }
 
 const mapStateToProps = (state: any) => ({

@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
 import StorageService from '../services/storage-service';
 import AlertService from '../services/alert-service';
+import PlatformService from '../services/platform-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
@@ -26,6 +27,7 @@ class LoginScreen extends React.Component<Props> {
 	private api = ApiService;
 	private storage = StorageService;
 	private alert = AlertService;
+	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
@@ -117,6 +119,10 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	render() {
+		if (this.platform.isWeb) {
+			return this.renderMain();
+		}
+
 		return (
 			<CorrectKeyboardContainer>
 				{this.renderMain()}
