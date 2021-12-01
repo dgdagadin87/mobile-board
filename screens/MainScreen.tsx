@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
 	ImageBackground,
 	StyleSheet,
+	ScrollView,
 	Image,
 	TouchableOpacity,
 } from 'react-native';
@@ -19,12 +20,91 @@ import PlatformService from '../services/platform-service';
 
 const platform = PlatformService;
 
+const getImageGabarites = (): { width: number, height: number } => {
+	const width: number = (platform.width * .88) - 12;
+	const height: number = width * .5625;
+
+	return { width, height };
+}
+const gabarites = getImageGabarites();
+
 const VideoComponent = function(props : VideoItem) {
+	const isVideoEmpty = (): boolean => {
+		return !props.cdn;
+	}
+
+	const getPreview = (): string => {
+		if (isVideoEmpty()) {
+			return '';
+		}
+		const previews: string[] = props.cdn && props.cdn.previews || [];
+		const result: string = previews[0];
+
+		if (!result) {
+			return '';
+		}
+
+		return result.indexOf('http') === -1 ? 'https://' + result : result;
+	}
+
+	const renderVideo = () => {
+		if (isVideoEmpty()) {
+			return (
+				<View
+					style={
+						[
+							gabarites,
+							styles.videoPreview,
+							{
+								backgroundColor: '#a8a8a8',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}
+						]
+					}
+				>
+					<Text style={{
+						padding: 20,
+						color: '#006587',
+						textAlign: 'center',
+						fontSize: 16,
+						fontWeight: 'bold',
+					}}>
+						К сожалению, данное видео не было одобрено к публикации:( Поэтому мы очень ждём Ваши публикации!
+					</Text>
+				</View>
+			);
+		}
+
+		const preview: string = getPreview();
+
+		if (!preview) {
+			return (
+				<View style={
+					[
+						gabarites,
+						styles.videoPreview,
+						{
+							backgroundColor: '#000000',
+							justifyContent: 'center',
+							alignItems: 'center',
+						}
+					]
+				} />
+			);
+		}
+
+		return (
+			<Image
+				style={ [gabarites, styles.videoPreview] }
+				source={{ uri: preview }}
+			/>
+		);
+	}
+
 	return (
-		<View style={{}}>
-			<Text style={{}}>
-				{ props.name }
-			</Text>
+		<View style={styles.videoItem}>
+			{ renderVideo() }
 		</View>
 	);
 }
@@ -70,7 +150,7 @@ class MainScreen extends React.Component<any> {
 	async setVideos(): Promise<void> {
 		try {
 			const response: VideoItem[] = await this.api.getVideos();
-			this.props.setVideosList(response);
+			this.props.actions.setVideosList(response);
 		}
 		catch(error) {
 			this.alert.alert('Ошибка', 'Что-то пошло не так');
@@ -95,7 +175,13 @@ class MainScreen extends React.Component<any> {
 	}
 
 	renderVideoList() {
+		const videoList = this.props.videos.map(
+			(video: VideoItem, index: number) => <VideoComponent key={index} { ...video } />
+		);
 
+		return (
+			<View style={styles.listContainer}>{videoList}</View>
+		);
 	}
 
 	render() {
@@ -103,47 +189,49 @@ class MainScreen extends React.Component<any> {
 
 		return (
 			<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
-				<View style={styles.userData}>
-					<Text
-						onPress={this.onEditClick}
-						style={styles.userDataName}
-					>
-						{user.username}&nbsp;&nbsp;&nbsp;
-						<FontAwesome  name="edit" size={19} color={'white'} />
-					</Text>
-					<Text style={styles.userDataMail}>{user.email}</Text>
-					<FontAwesome
-						name="user"
-						size={70}
-						color={'white'}
-						style={styles.userAvatar}
-					/>
-				</View>
-
-				<FontAwesome
-					onPress={this.onHelpClick}
-					name="question-circle"
-					size={25}
-					color={'white'}
-					style={styles.helpIcon}
-				/>
-				<Text onPress={this.onHelpClick} style={styles.helpText}>Помощь</Text>
-
-				<View style={styles.newVideoBlock}>
-					<View style={styles.newVideoLine}></View>
-					<TouchableOpacity
-						activeOpacity={0.99}
-						onPress={this.onNewVideoClick}
-						style={styles.newVideoContainer}
-					>
-						<Image
-							style={styles.newVideoButton}
-							source={require('../assets/images/cameraicon.png')}
+				<ScrollView>
+					<View style={styles.userData}>
+						<Text
+							onPress={this.onEditClick}
+							style={styles.userDataName}
+						>
+							{user.username}&nbsp;&nbsp;&nbsp;
+							<FontAwesome  name="edit" size={19} color={'white'} />
+						</Text>
+						<Text style={styles.userDataMail}>{user.email}</Text>
+						<FontAwesome
+							name="user"
+							size={70}
+							color={'white'}
+							style={styles.userAvatar}
 						/>
-					</TouchableOpacity>
-				</View>
+					</View>
 
-				{ videos.length < 1 ? this.renderEmptyVideoMessage() : this.renderVideoList() }
+					<FontAwesome
+						onPress={this.onHelpClick}
+						name="question-circle"
+						size={25}
+						color={'white'}
+						style={styles.helpIcon}
+					/>
+					<Text onPress={this.onHelpClick} style={styles.helpText}>Помощь</Text>
+
+					<View style={styles.newVideoBlock}>
+						<View style={styles.newVideoLine}></View>
+						<TouchableOpacity
+							activeOpacity={0.99}
+							onPress={this.onNewVideoClick}
+							style={styles.newVideoContainer}
+						>
+							<Image
+								style={styles.newVideoButton}
+								source={require('../assets/images/cameraicon.png')}
+							/>
+						</TouchableOpacity>
+					</View>
+
+					{ videos.length < 1 ? this.renderEmptyVideoMessage() : this.renderVideoList() }
+				</ScrollView>
 			</ImageBackground>
 		);
 	}
@@ -278,6 +366,31 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		textAlign: 'center',
 		color: 'grey',
+	},
+	listContainer: {
+		backgroundColor: 'transparent',
+		marginTop: 45,
+	},
+	videoItem: {
+		padding: 5,
+		borderRadius: 5,
+		backgroundColor: '#Bdd2d8',
+		borderColor: '#9eb0b5',
+		borderWidth: 1,
+		width: platform.width * .88,
+		marginLeft: '6%',
+		marginBottom: 15,
+		position: 'relative'
+	},
+	videoItemText: {
+		backgroundColor: 'transparent',
+	},
+	videoPreview: {
+		resizeMode: 'cover',
+		borderRadius: 5,
+		borderColor: '#9eb0b5',
+		borderWidth: 1,
+
 	}
 });
 
