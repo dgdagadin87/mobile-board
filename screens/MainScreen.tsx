@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
@@ -38,7 +39,9 @@ const VideoComponent = function(props : VideoItem) {
 		if (isVideoEmpty() || !props.cdn?.cdn_url) {
 			return;
 		}
+		await ScreenOrientation.unlockAsync();
 		await WebBrowser.openBrowserAsync('https://' + props.cdn?.cdn_url);
+		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 	}
 
 	const getPreview = (): string => {
