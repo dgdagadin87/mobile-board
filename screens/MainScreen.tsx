@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
@@ -33,6 +34,13 @@ const VideoComponent = function(props : VideoItem) {
 		return !props.cdn;
 	}
 
+	const onWatchClick = async (): Promise<void> => {
+		if (isVideoEmpty() || !props.cdn?.cdn_url) {
+			return;
+		}
+		await WebBrowser.openBrowserAsync('https://' + props.cdn?.cdn_url);
+	}
+
 	const getPreview = (): string => {
 		if (isVideoEmpty()) {
 			return '';
@@ -45,6 +53,18 @@ const VideoComponent = function(props : VideoItem) {
 		}
 
 		return result.indexOf('http') === -1 ? 'https://' + result : result;
+	}
+
+	const renderPlayButton = () => {
+		return (
+			<FontAwesome
+				onPress={onWatchClick}
+				name="play"
+				size={70}
+				color={'red'}
+				style={styles.videoPlay}
+			/>
+		);
 	}
 
 	const renderVideo = () => {
@@ -80,25 +100,32 @@ const VideoComponent = function(props : VideoItem) {
 
 		if (!preview) {
 			return (
-				<View style={
-					[
-						gabarites,
-						styles.videoPreview,
-						{
-							backgroundColor: '#000000',
-							justifyContent: 'center',
-							alignItems: 'center',
-						}
-					]
-				} />
+				<>
+					{ renderPlayButton() }
+					<View style={
+						[
+							gabarites,
+							styles.videoPreview,
+							{
+								backgroundColor: '#000000',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}
+						]
+					} />
+				</>
 			);
 		}
 
 		return (
-			<Image
-				style={ [gabarites, styles.videoPreview] }
-				source={{ uri: preview }}
-			/>
+			<>
+				{ renderPlayButton() }
+				<Image
+					style={ [gabarites, styles.videoPreview] }
+					source={{ uri: preview }}
+				/>
+			</>
+
 		);
 	}
 
@@ -391,7 +418,14 @@ const styles = StyleSheet.create({
 		borderColor: '#9eb0b5',
 		borderWidth: 1,
 
-	}
+	},
+	videoPlay: {
+		position: 'absolute',
+		color: 'red',
+		top: ((gabarites.height / 2) - 29),
+		left: ((gabarites.width / 2) - 25),
+		zIndex: 2,
+	},
 });
 
 const extendedComponent = WithAuth(MainScreen);
