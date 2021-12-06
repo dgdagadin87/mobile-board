@@ -6,9 +6,9 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ApiService from '../services/api-service';
-import StorageService from '../services/storage-service';
 import AlertService from '../services/alert-service';
 import PlatformService from '../services/platform-service';
+import AuthService from '../services/auth-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
@@ -25,9 +25,9 @@ type Props = {
 
 class LoginScreen extends React.Component<Props> {
 	private api = ApiService;
-	private storage = StorageService;
 	private alert = AlertService;
 	private platform = PlatformService;
+	private auth = AuthService;
 
 	constructor(props: Props) {
 		super(props);
@@ -57,7 +57,7 @@ class LoginScreen extends React.Component<Props> {
 	async onLogin(): Promise<void> {
 		try {
 			const response: any = await this.api.auth(this.props.login, this.props.password);
-			await this.storage.setData('auth', response);
+			await this.auth.auth(response);
 			this.props.navigation.navigate('Root');
 		}
 		catch(err) {
@@ -73,7 +73,7 @@ class LoginScreen extends React.Component<Props> {
 		const { login, password } = this.props;
 
 		return (
-			<View style={styles.container}>
+			<View style={[styles.container, { height: this.platform.height } ]}>
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
@@ -119,9 +119,9 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	render() {
-		if (this.platform.isWeb) {
+		/*if (this.platform.isWeb) {
 			return this.renderMain();
-		}
+		}*/
 
 		return (
 			<CorrectKeyboardContainer>

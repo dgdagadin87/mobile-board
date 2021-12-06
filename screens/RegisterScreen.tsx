@@ -84,7 +84,7 @@ class RegisterScreen extends React.Component<Props> {
 
 	async onRegister() {
 		try {
-			const response: any = await this.api.register(
+			await this.api.register(
 				this.props.login,
 				this.props.password,
 				this.props.name,
@@ -105,7 +105,7 @@ class RegisterScreen extends React.Component<Props> {
 		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
 
 		return (
-			<View style={styles.container}>
+			<View style={[styles.container, { height: this.platform.height } ]}>
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 

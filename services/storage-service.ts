@@ -17,6 +17,10 @@ class StorageService {
         return this.store.load({ key: STORAGE_KEY + key });
     }
 
+    public async removeData(key: string): Promise<void> {
+        await this.store.remove({ key: STORAGE_KEY + key })
+    }
+
     private createStore(): Storage {
         return new Storage({
             size: 1000000,

@@ -14,6 +14,10 @@ class PlatformService {
         return Dimensions.get('window').width;
     }
 
+    public get height(): number {
+        return Dimensions.get('window').height;
+    }
+
 }
 
 const platformService: PlatformService = new PlatformService();

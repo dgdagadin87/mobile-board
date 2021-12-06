@@ -7,14 +7,14 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import { connect } from 'react-redux';
+import { Video } from 'expo-av';
+import VideoPlayer from 'expo-video-player';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import { setUserData, setVideosList } from '../redux/actions/main';
-import { VideoItem, VideoCdn } from '../redux/reducers/mainReducer';
+import { VideoItem } from '../redux/reducers/mainReducer';
 import AuthService from '../services/auth-service';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
@@ -28,113 +28,67 @@ const getImageGabarites = (): { width: number, height: number } => {
 
 	return { width, height };
 }
-const gabarites = getImageGabarites();
+const gabarites: any = getImageGabarites();
 
 const VideoComponent = function(props : VideoItem) {
 	const isVideoEmpty = (): boolean => {
 		return !props.cdn;
 	}
 
-	const onWatchClick = async (): Promise<void> => {
-		if (isVideoEmpty() || !props.cdn?.cdn_url) {
-			return;
-		}
-		await ScreenOrientation.unlockAsync();
-		await WebBrowser.openBrowserAsync('https://' + props.cdn?.cdn_url);
-		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-	}
-
-	const getPreview = (): string => {
-		if (isVideoEmpty()) {
-			return '';
-		}
-		const previews: string[] = props.cdn && props.cdn.previews || [];
-		const result: string = previews[0];
-
-		if (!result) {
-			return '';
-		}
-
-		return result.indexOf('http') === -1 ? 'https://' + result : result;
-	}
-
-	const renderPlayButton = () => {
-		return (
-			<FontAwesome
-				onPress={onWatchClick}
-				name="play"
-				size={70}
-				color={'red'}
-				style={styles.videoPlay}
-			/>
-		);
-	}
-
 	const renderVideo = () => {
-		if (isVideoEmpty()) {
+		if (isVideoEmpty() || !props.cdn?.cdn_url) {
 			return (
-				<View
-					style={
-						[
-							gabarites,
-							styles.videoPreview,
-							{
-								backgroundColor: '#a8a8a8',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}
-						]
-					}
-				>
-					<Text style={{
-						padding: 20,
-						color: '#006587',
-						textAlign: 'center',
-						fontSize: 16,
-						fontWeight: 'bold',
-					}}>
+				<View style={[ gabarites, styles.videoPreview, styles.emptyVideoContainer ]}>
+					<Text style={styles.emptyVideoText}>
 						К сожалению, данное видео не было одобрено к публикации:( Поэтому мы очень ждём Ваши публикации!
 					</Text>
 				</View>
 			);
 		}
 
-		const preview: string = getPreview();
-
-		if (!preview) {
-			return (
-				<>
-					{ renderPlayButton() }
-					<View style={
-						[
-							gabarites,
-							styles.videoPreview,
-							{
-								backgroundColor: '#000000',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}
-						]
-					} />
-				</>
-			);
-		}
+		const videoUrl: string = props.cdn?.cdn_url.indexOf('http') === -1 ? 'https://' + props.cdn?.cdn_url : props.cdn?.cdn_url;
 
 		return (
-			<>
-				{ renderPlayButton() }
-				<Image
-					style={ [gabarites, styles.videoPreview] }
-					source={{ uri: preview }}
-				/>
-			</>
-
+			<VideoPlayer
+				defaultControlsVisible={true}
+				videoProps={{
+					shouldPlay: false,
+					resizeMode: Video.RESIZE_MODE_CONTAIN,
+					source: { uri: videoUrl },
+				}}
+				style={{
+					videoBackgroundColor: 'transparent',
+					...gabarites
+				}}
+				icon={{
+					play: <Text style={{ color: '#FFF' }}>PLAY</Text>,
+					pause: <Text style={{ color: '#FFF' }}>PAUSE</Text>,
+				}}
+				fullscreen={{
+					inFullscreen: true,
+					enterFullscreen: async () => {
+						//await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT)
+					},
+					exitFullscreen: async () => {
+						//await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT)
+					}
+				}}
+			/>
 		);
-	}
+	};
+
+	const renderDetails = () => {
+		return (
+			<View style={styles.videoDetailsContainer}>
+				<Text style={styles.videoName}>{ props.name }</Text>
+			</View>
+		);
+	};
 
 	return (
 		<View style={styles.videoItem}>
 			{ renderVideo() }
+			{ renderDetails() }
 		</View>
 	);
 }
@@ -157,8 +111,10 @@ class MainScreen extends React.Component<any> {
 		await this.setVideos();
 	}
 
-	onHelpClick() {
-		this.alert.alert('Помощь', 'Это кнопка помощи');
+	async onHelpClick() {
+		await this.auth.exit();
+		this.props.navigation.navigate('Login');
+		//this.alert.alert('Помощь', 'Это кнопка помощи');
 	}
 
 	onNewVideoClick() {
@@ -422,13 +378,34 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 
 	},
-	videoPlay: {
-		position: 'absolute',
-		color: 'red',
-		top: ((gabarites.height / 2) - 29),
-		left: ((gabarites.width / 2) - 25),
-		zIndex: 2,
+	emptyVideoContainer: {
+		backgroundColor: '#a8a8a8',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
+	emptyVideoText: {
+		padding: 20,
+		color: '#006587',
+		textAlign: 'center',
+		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	emptyPreview: {
+		backgroundColor: '#000000',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	videoDetailsContainer: {
+		marginTop: 15,
+		backgroundColor: 'transparent'
+	},
+	videoName: {
+		paddingRight: 100,
+		color: 'white',
+		fontSize: 18,
+		fontWeight: 'bold',
+		backgroundColor: 'transparent'
+	}
 });
 
 const extendedComponent = WithAuth(MainScreen);
