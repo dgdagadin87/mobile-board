@@ -3,12 +3,13 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
+    ActivityIndicator
 } from 'react-native';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
-import { View } from '../components/Themed';
+import {Text, View} from '../components/Themed';
 import {
     setVideoName,
     setVideoDescription,
@@ -32,6 +33,8 @@ class SendAddedVideoScreen extends React.Component<any, any> {
 
     constructor(props: any) {
         super(props);
+
+        this.state = { isLoading: false };
 
         this.changeVideoName = this.changeVideoName.bind(this);
         this.changeVideoDescription = this.changeVideoDescription.bind(this);
@@ -79,18 +82,29 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     async sendOnModeration(): Promise<void> {
+        if (this.state.isLoading) {
+            return;
+        }
+
         if (this.isButtonDisabled) {
             this.alert.alert('Ошибка', 'Все поля обязательные');
             return;
         }
 
         const dateParam: string = this.getDateString();
+        this.setState(
+            { isLoading: true },
+            () => {
 
-        try {
-            const response: any = await this.api.uploadVideo(this.props.videoName, this.fullDescription, dateParam, this.props.video.uri);
-            if (response.success) {
-                this.alert.alert('Успех', 'Видео успешно отправлено на модерацию');
             }
+        );
+        try {
+            //const response: any = await this.api.uploadVideo(this.props.videoName, this.fullDescription, dateParam, this.props.video.uri);
+            setTimeout(() => {this.setState({isLoading: false}); this.alert.alert('Успех', 'Видео успешно отправлено на модерацию');}, 2000);
+            //this.setState({ isLoading: false });
+            //if (response.success) {
+            //    this.alert.alert('Успех', 'Видео успешно отправлено на модерацию');
+            //}
         }
         catch(err) {
             this.alert.alert('Ошибка', 'При отправке видео возникла ошибка');
@@ -147,6 +161,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     renderForm() {
+        console.log(this.state.isLoading)
         return (
             <View style={styles.form}>
                 <CustomTextInput
@@ -208,13 +223,27 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
                 />
-                <CustomButton
-                    customStyles={{ width: '100%', marginLeft: 0, marginBottom: 50 }}
-                    buttonText="Отправить на модерацию"
-                    isDisabled={this.isButtonDisabled}
-                    onButtonClick={this.sendOnModeration}
-                />
+                {
+                    this.state.isLoading
+                        ? <ActivityIndicator size="large" />
+                        : <CustomButton
+                            customStyles={{ width: '100%', marginLeft: 0, marginBottom: 50 }}
+                            buttonText="Отправить на модерацию"
+                            isDisabled={this.isButtonDisabled}
+                            onButtonClick={this.sendOnModeration}
+                        />
+                }
             </View>
+        );
+    }
+
+    renderSpinner() {
+        if (!this.state.isLoading) {
+            return null;
+        }
+
+        return (
+            <ActivityIndicator size="large" />
         );
     }
 
