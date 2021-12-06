@@ -1,19 +1,16 @@
 import * as FileSystem from 'expo-file-system';
 
 class FileService {
-	async getFileContent(fileUri: string): Promise<string> {
+	public async isFileExists(fileUri: string): Promise<boolean> {
 		const fileInfo: any = await FileSystem.getInfoAsync(fileUri);
 
-		if (!fileInfo.exists) {
-			return '';
-		}
-
-		const fileContent: string = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
-		return fileContent;
+		return !!fileInfo.exists;
 	}
 
-	deleteFile(): void {
-
+	public async deleteFile(fileUri: string): Promise<void> {
+		if (await this.isFileExists(fileUri)) {
+			await FileSystem.deleteAsync(fileUri, { idempotent: true });
+		}
 	}
 }
 

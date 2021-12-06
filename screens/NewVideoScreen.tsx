@@ -8,6 +8,7 @@ import { setVideoData } from '../redux/actions/newVideo';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
+import FileService from '../services/file-service';
 
 const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
@@ -18,7 +19,7 @@ const VideoTimer = (props: any) => {
 		let interval: any = null;
 		if (isRecording) {
 			interval = setInterval(() => {
-			setSeconds(seconds => seconds + 1);
+				setSeconds(seconds => seconds + 1);
 			}, 1000);
 		}
 		else if (!isRecording && seconds !== 1) {
@@ -34,13 +35,19 @@ const VideoTimer = (props: any) => {
 			</Text>
 		</View>
 	);
-  };
+};
 
 class NewVideoScreen extends React.Component<any, any> {
 	private cameraRef: any = null;
 
+	private file = FileService;
+
 	constructor(props: any) {
 		super(props);
+
+		props.navigation.addListener('focus', async () => {
+			await this.deleteVideoIfExists();
+		});
 
 		this.goBackClick = this.goBackClick.bind(this);
 		this.onChangeOrientationListener = this.onChangeOrientationListener.bind(this);
@@ -66,11 +73,19 @@ class NewVideoScreen extends React.Component<any, any> {
 		ScreenOrientation.removeOrientationChangeListeners();
 	}
 
+	async deleteVideoIfExists(): Promise<void> {
+		if (this.isVideoEmpty) {
+			return;
+		}
+		await this.file.deleteFile(this.props.video.uri);
+		this.props.setVideoData({});
+	}
+
 	async setPermissions() {
 		const { status: cameraStatus = null } = await Camera.getCameraPermissionsAsync();
 		const { status: microphoneStatus = null } = await Camera.getMicrophonePermissionsAsync();
 
-		this.setState({ hasPermissions:/* microphoneStatus === 'granted' &&*/ cameraStatus === 'granted' });
+		this.setState({ hasPermissions: microphoneStatus === 'granted' && cameraStatus === 'granted' });
 	}
 
 	onChangeOrientationListener(event: any = {}) {

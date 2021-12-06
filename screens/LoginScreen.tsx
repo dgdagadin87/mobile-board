@@ -119,9 +119,9 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	render() {
-		/*if (this.platform.isWeb) {
+		if (this.platform.isWeb) {
 			return this.renderMain();
-		}*/
+		}
 
 		return (
 			<CorrectKeyboardContainer>
