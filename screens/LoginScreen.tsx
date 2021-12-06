@@ -14,6 +14,7 @@ import { Text, View } from '../components/Themed';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
 import { CustomTextInput } from '../components/CustomTextInput';
+import { CustomLoader } from '../components/CustomLoader';
 import { AppLogo } from '../components/AppLogo';
 
 type Props = {
@@ -23,7 +24,7 @@ type Props = {
 	navigation: any,
 };
 
-class LoginScreen extends React.Component<Props> {
+class LoginScreen extends React.Component<Props, any> {
 	private api = ApiService;
 	private alert = AlertService;
 	private platform = PlatformService;
@@ -31,6 +32,8 @@ class LoginScreen extends React.Component<Props> {
 
 	constructor(props: Props) {
 		super(props);
+
+		this.state = { isLoading: false };
 
 		this.onLogin = this.onLogin.bind(this);
 		this.changeLogin = this.changeLogin.bind(this);
@@ -55,12 +58,19 @@ class LoginScreen extends React.Component<Props> {
 	}
 
 	async onLogin(): Promise<void> {
+		if (this.isButtonDisabled) {
+			return;
+		}
+
+		this.setState({ isLoading: true });
 		try {
 			const response: any = await this.api.auth(this.props.login, this.props.password);
+			this.setState({ isLoading: false });
 			await this.auth.auth(response);
 			this.props.navigation.navigate('Root');
 		}
 		catch(err) {
+			this.setState({ isLoading: false });
 			this.alert.alert('Ошибка', 'Что-то пошло не так');
 		}
 	}
@@ -113,10 +123,20 @@ class LoginScreen extends React.Component<Props> {
 							<Text style={styles.publicOffertText}>Публичная оферта</Text>
 						</View>
 					</View>
+
+					{ this.state.isLoading ? <CustomLoader /> : null }
 				</ImageBackground>
 			</View>
 		);
 	}
+
+	renderLoader() {
+        if (!this.state.isLoading) {
+            return null;
+        }
+
+        return <CustomLoader />;
+    }
 
 	render() {
 		if (this.platform.isWeb) {

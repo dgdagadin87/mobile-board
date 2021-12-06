@@ -17,6 +17,7 @@ import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
+import { CustomLoader } from '../components/CustomLoader';
 import { AppLogo } from '../components/AppLogo';
 import { CustomTextInput } from '../components/CustomTextInput';
 import ApiService from '../services/api-service';
@@ -34,13 +35,15 @@ type Props = {
     navigation: any,
 };
 
-class RegisterScreen extends React.Component<Props> {
+class RegisterScreen extends React.Component<Props, any> {
 	private api = ApiService;
 	private alert = AlertService;
 	private platform = PlatformService;
 
 	constructor(props: Props) {
 		super(props);
+
+		this.state = { isLoading: false };
 
 		this.onRegister = this.onRegister.bind(this);
 		this.changeLogin = this.changeLogin.bind(this);
@@ -83,6 +86,11 @@ class RegisterScreen extends React.Component<Props> {
 	}
 
 	async onRegister() {
+		if (this.isButtonDisabled) {
+			return;
+		}
+
+		this.setState({ isLoading: true });
 		try {
 			await this.api.register(
 				this.props.login,
@@ -90,9 +98,11 @@ class RegisterScreen extends React.Component<Props> {
 				this.props.name,
 				this.props.mail
 			);
+			this.setState({ isLoading: false });
 			this.alert.alert('Успех', 'Вы успешно зарегистрировались в системе');
 		}
 		catch(err) {
+			this.setState({ isLoading: false });
 			this.alert.alert('Ошибка', 'Что-то пошло не так');
 		}
 	}
@@ -175,6 +185,8 @@ class RegisterScreen extends React.Component<Props> {
 							<Text onPress={() => this.login()} style={styles.haveAccountText}>Уже есть аккаунт?</Text>
 						</View>
 					</View>
+
+					{ this.state.isLoading ? <CustomLoader /> : null }
 				</ImageBackground>
 			</View>
 		);

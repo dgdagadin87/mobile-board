@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { MaskedTextInput } from "react-native-mask-text";
+import { MaskedTextInput } from 'react-native-mask-text';
 import { Text, View } from './Themed';
 import platform from '../services/platform-service';
 
@@ -57,7 +57,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 					style={getInputStyles()}
 					value={props.value}
 					placeholder={props.placeholderText}
-					onChangeText={(text) => props.onChangeValue(text)}
+					onChangeText={(text: string) => props.onChangeValue(text)}
 				/>
 			</View>
 		);
