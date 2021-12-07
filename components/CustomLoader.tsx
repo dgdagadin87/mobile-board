@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         zIndex: 100,
         justifyContent: 'center',
         width: '100%',
-        height: (platform.height*1.15),
+        height: (platform.height*1.3),
         flexDirection: 'row',
         padding: 10,
         backgroundColor: '#ffffff',

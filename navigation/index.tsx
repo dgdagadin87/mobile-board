@@ -8,7 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 
-import ModalScreen from '../screens/ModalScreen';
+import ThanksScreen from '../screens/ThanksScreen';
 import MainScreen from '../screens/MainScreen';
 import NewVideoScreen from '../screens/NewVideoScreen';
 import SendAddedVideoScreen from '../screens/SendAddedVideoScreen';
@@ -44,11 +44,9 @@ function RootNavigator() {
                 <Stack.Screen name="SendAddedVideo" component={SendAddedVideoScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Thanks" component={ThanksScreen} options={{ headerShown: false }} />
             </Stack.Group>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-            <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                <Stack.Screen name="Modal" component={ModalScreen} />
-            </Stack.Group>
         </Stack.Navigator>
   );
 }

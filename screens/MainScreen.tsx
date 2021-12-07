@@ -12,6 +12,7 @@ import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
 import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
+import { CustomLoader } from '../components/CustomLoader';
 import WithAuth from '../components/hocs/WithAuth';
 import { setUserData, setVideosList } from '../redux/actions/main';
 import { VideoItem } from '../redux/reducers/mainReducer';
@@ -60,10 +61,6 @@ const VideoComponent = function(props : VideoItem) {
 					videoBackgroundColor: 'transparent',
 					...gabarites
 				}}
-				icon={{
-					play: <Text style={{ color: '#FFF' }}>PLAY</Text>,
-					pause: <Text style={{ color: '#FFF' }}>PAUSE</Text>,
-				}}
 				fullscreen={{
 					inFullscreen: true,
 					enterFullscreen: async () => {
@@ -93,13 +90,17 @@ const VideoComponent = function(props : VideoItem) {
 	);
 }
 
-class MainScreen extends React.Component<any> {
+class MainScreen extends React.Component<any, any> {
 	private api = ApiService;
 	private auth = AuthService;
 	private alert = AlertService;
 
 	constructor(props: any) {
 		super(props);
+
+		this.state = { isLoading: false };
+
+		props.navigation.addListener('focus', this.setVideos);
 
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
@@ -134,16 +135,23 @@ class MainScreen extends React.Component<any> {
 	}
 
 	async setVideos(): Promise<void> {
+		this.setState({ isLoading: true });
 		try {
 			const response: VideoItem[] = await this.api.getVideos();
+			this.setState({ isLoading: false })
 			this.props.actions.setVideosList(response);
 		}
 		catch(error) {
-			this.alert.alert('Ошибка', 'Что-то пошло не так');
+			await this.alert.alert('Ошибка', 'Что-то пошло не так');
+			this.setState({ isLoading: false });
 		}
 	}
 
 	renderEmptyVideoMessage() {
+		if (this.state.isLoading) {
+			return null;
+		}
+
 		return (
 			<View style={styles.emptyContainer}>
 				<Image
@@ -161,6 +169,10 @@ class MainScreen extends React.Component<any> {
 	}
 
 	renderVideoList() {
+		if (this.state.isLoading) {
+			return null;
+		}
+
 		const videoList = this.props.videos.map(
 			(video: VideoItem, index: number) => <VideoComponent key={index} { ...video } />
 		);
@@ -218,6 +230,8 @@ class MainScreen extends React.Component<any> {
 
 					{ videos.length < 1 ? this.renderEmptyVideoMessage() : this.renderVideoList() }
 				</ScrollView>
+
+				{ this.state.isLoading ? <CustomLoader /> : null }
 			</ImageBackground>
 		);
 	}
@@ -279,9 +293,9 @@ const styles = StyleSheet.create({
 	},
 	helpText: {
 		position: 'absolute',
-		top: 179,
+		top: 170,
 		left: 50,
-		fontSize: 12,
+		fontSize: 15,
 		textDecorationLine: 'underline',
 		color: 'white',
 	},

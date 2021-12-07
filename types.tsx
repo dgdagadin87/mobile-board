@@ -17,7 +17,7 @@ export type RootStackParamList = {
     Register: undefined;
     NewVideo: undefined;
     SendAddedVideo: undefined;
-    Modal: undefined;
+    Thanks: undefined;
     NotFound: undefined;
 };
 

@@ -8,7 +8,7 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
-import {Text, View} from '../components/Themed';
+import { View } from '../components/Themed';
 import {
     setVideoName,
     setVideoDescription,
@@ -97,8 +97,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
             const response: any = await this.api.uploadVideo(this.props.videoName, this.fullDescription, dateParam, this.props.video.uri);
             this.setState({ isLoading: false });
             if (response.success) {
-                await this.alert.alert('Успех', 'Видео успешно отправлено на модерацию');
-                this.props.navigation.navigate('Root');
+                this.props.navigation.navigate('Thanks');
             }
             else {
                 this.showError();
@@ -164,7 +163,6 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     renderForm() {
-        console.log(this.state.isLoading)
         return (
             <View style={styles.form}>
                 <CustomTextInput
@@ -226,7 +224,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
                 />
-                
+
                 <CustomButton
                     customStyles={{ width: '100%', marginLeft: 0, marginBottom: 50 }}
                     buttonText="Отправить на модерацию"
