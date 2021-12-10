@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { setVideoData } from '../redux/actions/newVideo';
+import { setVideoData, setEmptyAddVideoForm } from '../redux/actions/newVideo';
 import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
@@ -73,12 +73,12 @@ class NewVideoScreen extends React.Component<any, any> {
 		ScreenOrientation.removeOrientationChangeListeners();
 	}
 
-	async deleteVideoIfExists(): Promise<void> {
+	deleteVideoIfExists(): void {
 		if (this.isVideoEmpty) {
 			return;
 		}
-		await this.file.deleteFile(this.props.video.uri);
-		this.props.setVideoData({});
+		// TODO await this.file.deleteFile(this.props.video.uri);
+		this.props.actions.setVideoData({});
 	}
 
 	async setPermissions() {
@@ -109,14 +109,15 @@ class NewVideoScreen extends React.Component<any, any> {
 				async () => {
 					const video: any = await this.cameraRef.recordAsync();
 					this.props.actions.setVideoData(video);
-					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 200);
+					this.props.actions.setEmptyAddVideoForm();
+					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 2000);
 				}
 			);
 		}
 		else {
 			this.setState(
 				{ isRecording: false },
-				async () => {
+				() => {
 					this.cameraRef.stopRecording();
 				}
 			);
@@ -149,7 +150,8 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderBanner() {
-		if (this.state.hasPermissions && this.state.isLandscape || !this.isVideoEmpty || this.state.isRecording) {
+		console.log(this.props.video)
+		if (this.state.isLandscape || this.state.isRecording) {
 			return null;
 		}
 
@@ -248,7 +250,7 @@ const mapStateToProps = (state: any) => ({
 
 const ActionCreators = Object.assign(
 	{},
-	{ setVideoData }
+	{ setVideoData, setEmptyAddVideoForm }
 );
 const mapDispatchToProps = (dispatch: any) => ({
 	actions: bindActionCreators(ActionCreators, dispatch),

@@ -6,6 +6,7 @@ import {
     SEND_ADDED_VIDEO_EFIR_DATE,
     SEND_ADDED_VIDEO_COUNTRY_CITY_FROM,
     SEND_ADDED_VIDEO_ACTIVITY_TYPE,
+    SEND_ADDED_VIDEO_FORM_EMPTY,
 } from '../constants';
 
 const initialState = {
@@ -60,6 +61,17 @@ const newVideoReducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 activityType: action.payload
+            };
+
+        case SEND_ADDED_VIDEO_FORM_EMPTY:
+            return {
+                ...state,
+                videoName: '',
+                filmName: '',
+                efirDate: '',
+                videoDescription: '',
+                countryCityFrom: '',
+                activityType: '',
             };
 
         default:

@@ -63,12 +63,8 @@ const VideoComponent = function(props : VideoItem) {
 				}}
 				fullscreen={{
 					inFullscreen: true,
-					enterFullscreen: async () => {
-						//await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT)
-					},
-					exitFullscreen: async () => {
-						//await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT)
-					}
+					enterFullscreen: async () => {},
+					exitFullscreen: async () => {}
 				}}
 			/>
 		);
@@ -100,7 +96,7 @@ class MainScreen extends React.Component<any, any> {
 
 		this.state = { isLoading: false };
 
-		props.navigation.addListener('focus', this.setVideos);
+		props.navigation.addListener('focus', async() => await this.setVideos());
 
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
@@ -113,9 +109,9 @@ class MainScreen extends React.Component<any, any> {
 	}
 
 	async onHelpClick() {
-		await this.auth.exit();
-		this.props.navigation.navigate('Login');
-		//this.alert.alert('Помощь', 'Это кнопка помощи');
+		//await this.auth.exit();
+		//this.props.navigation.navigate('Login');
+		this.alert.alert('Помощь', 'Это кнопка помощи');
 	}
 
 	onNewVideoClick() {
@@ -293,7 +289,7 @@ const styles = StyleSheet.create({
 	},
 	helpText: {
 		position: 'absolute',
-		top: 170,
+		top: 175,
 		left: 50,
 		fontSize: 15,
 		textDecorationLine: 'underline',
@@ -411,14 +407,22 @@ const styles = StyleSheet.create({
 	},
 	videoDetailsContainer: {
 		marginTop: 15,
-		backgroundColor: 'transparent'
+		backgroundColor: 'transparent',
+		position: 'relative'
 	},
 	videoName: {
-		paddingRight: 100,
+		paddingRight: '50%',
 		color: 'white',
 		fontSize: 18,
 		fontWeight: 'bold',
 		backgroundColor: 'transparent'
+	},
+	videoStatus: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		width: '50%',
+		textAlign: 'right',
 	}
 });
 

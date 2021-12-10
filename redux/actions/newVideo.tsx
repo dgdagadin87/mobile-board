@@ -6,6 +6,7 @@ import {
     SEND_ADDED_VIDEO_EFIR_DATE,
     SEND_ADDED_VIDEO_COUNTRY_CITY_FROM,
     SEND_ADDED_VIDEO_ACTIVITY_TYPE,
+    SEND_ADDED_VIDEO_FORM_EMPTY,
 } from '../constants';
 
 export function setVideoData(videoData: any) {
@@ -54,5 +55,12 @@ export function setActivityType(activityType: string) {
     return {
         type: SEND_ADDED_VIDEO_ACTIVITY_TYPE,
         payload: activityType
+    };
+}
+
+export function setEmptyAddVideoForm() {
+    return {
+        type: SEND_ADDED_VIDEO_FORM_EMPTY,
+        payload: null
     };
 }
