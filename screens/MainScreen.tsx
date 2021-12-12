@@ -14,7 +14,7 @@ import { bindActionCreators } from 'redux';
 import { Text, View } from '../components/Themed';
 import { CustomLoader } from '../components/CustomLoader';
 import WithAuth from '../components/hocs/WithAuth';
-import { setUserData, setVideosList } from '../redux/actions/main';
+import { setUserData, setVideosList, setDescription } from '../redux/actions/main';
 import { VideoItem } from '../redux/reducers/mainReducer';
 import AuthService from '../services/auth-service';
 import ApiService from '../services/api-service';
@@ -28,10 +28,10 @@ const getImageGabarites = (): { width: number, height: number } => {
 	const height: number = width * .5625;
 
 	return { width, height };
-}
+};
 const gabarites: any = getImageGabarites();
 
-const VideoComponent = function(props : VideoItem) {
+const VideoComponent = function(props : any) {
 	const isVideoEmpty = (): boolean => {
 		return !props.cdn;
 	}
@@ -74,6 +74,28 @@ const VideoComponent = function(props : VideoItem) {
 		return (
 			<View style={styles.videoDetailsContainer}>
 				<Text style={styles.videoName}>{ props.name }</Text>
+				<FontAwesome
+					name={ isVideoEmpty() ? 'times' : 'check' }
+					size={35}
+					color={ isVideoEmpty() ? 'red' : 'green' }
+					style={{ position: 'absolute', top: -10, right: 0 }}
+				/>
+				<Text numberOfLines={2} style={{  marginTop: 5, color: '#666666' }}>
+					{ props.description }
+				</Text>
+				<TouchableOpacity
+					style={{ textAlign: 'right', width: '100%' }}
+					onPress={() => props.onOpenModal(props.description)}
+				>
+					<Text style={{ marginTop: 5, textAlign: 'right', fontSize: 15, textDecorationLine: 'underline' }}>
+						Подробнее&nbsp;
+						<FontAwesome
+							name={ 'arrow-right' }
+							size={15}
+							color={ '#000000' }
+						/>
+					</Text>
+				</TouchableOpacity>
 			</View>
 		);
 	};
@@ -96,11 +118,17 @@ class MainScreen extends React.Component<any, any> {
 
 		this.state = { isLoading: false };
 
-		props.navigation.addListener('focus', async() => await this.setVideos());
+		props.navigation.addListener('focus', async () => await this.setVideos());
 
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
 		this.onHelpClick = this.onHelpClick.bind(this);
+		this.onShowDescription = this.onShowDescription.bind(this);
+	}
+
+	onShowDescription(description: string) {
+		this.props.actions.setDescription(description);
+		this.props.navigation.navigate('Description');
 	}
 
 	async componentDidMount(): Promise<void> {
@@ -109,9 +137,9 @@ class MainScreen extends React.Component<any, any> {
 	}
 
 	async onHelpClick() {
-		//await this.auth.exit();
-		//this.props.navigation.navigate('Login');
-		this.alert.alert('Помощь', 'Это кнопка помощи');
+		await this.auth.exit();
+		this.props.navigation.navigate('Login');
+		//this.alert.alert('Помощь', 'Это кнопка помощи');
 	}
 
 	onNewVideoClick() {
@@ -170,7 +198,15 @@ class MainScreen extends React.Component<any, any> {
 		}
 
 		const videoList = this.props.videos.map(
-			(video: VideoItem, index: number) => <VideoComponent key={index} { ...video } />
+		(video: VideoItem, index: number) => {
+				return (
+					<VideoComponent
+						key={index}
+						{ ...video }
+						onOpenModal={this.onShowDescription}
+					/>
+				);
+			}
 		);
 
 		return (
@@ -182,7 +218,11 @@ class MainScreen extends React.Component<any, any> {
 		const {user = {}, videos = []} = this.props;
 
 		return (
-			<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
+			<ImageBackground
+				source={require('../assets/images/auth_bg.png')}
+				resizeMode="cover"
+				style={styles.image}
+			>
 				<ScrollView>
 					<View style={styles.userData}>
 						<Text
@@ -241,7 +281,7 @@ const mapStateToProps = (state: any) => ({
 
 const ActionCreators = Object.assign(
 	{},
-	{ setUserData, setVideosList }
+	{ setUserData, setVideosList, setDescription }
 );
 const mapDispatchToProps = (dispatch: any) => ({
 	actions: bindActionCreators(ActionCreators, dispatch),
@@ -411,7 +451,7 @@ const styles = StyleSheet.create({
 		position: 'relative'
 	},
 	videoName: {
-		paddingRight: '50%',
+		paddingRight: '10%',
 		color: 'white',
 		fontSize: 18,
 		fontWeight: 'bold',
@@ -423,7 +463,7 @@ const styles = StyleSheet.create({
 		right: 0,
 		width: '50%',
 		textAlign: 'right',
-	}
+	},
 });
 
 const extendedComponent = WithAuth(MainScreen);

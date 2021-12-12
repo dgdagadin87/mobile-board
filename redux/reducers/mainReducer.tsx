@@ -1,4 +1,4 @@
-import { MAIN_SET_USER_DATA, MAIN_SET_USER_VIDEO_LIST } from '../constants';
+import { MAIN_SET_USER_DATA, MAIN_SET_USER_VIDEO_LIST, MAIN_SET_DESCRIPTION } from '../constants';
 
 export interface VideoCdn {
     id: string,
@@ -34,7 +34,8 @@ const initialState = {
         user_agreement: false,
         username: '',
     },
-    videos: []
+    videos: [],
+    description: '',
 };
 
 const mainReducer = (state = initialState, action: any) => {
@@ -49,6 +50,12 @@ const mainReducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 videos: action.payload
+            };
+
+        case MAIN_SET_DESCRIPTION:
+            return {
+                ...state,
+                description: action.payload
             };
 
         default:

@@ -10,6 +10,7 @@ import { ColorSchemeName } from 'react-native';
 
 import ThanksScreen from '../screens/ThanksScreen';
 import MainScreen from '../screens/MainScreen';
+import DescriptionScreen from '../screens/DescriptionScreen';
 import NewVideoScreen from '../screens/NewVideoScreen';
 import SendAddedVideoScreen from '../screens/SendAddedVideoScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -46,7 +47,10 @@ function RootNavigator() {
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Thanks" component={ThanksScreen} options={{ headerShown: false }} />
             </Stack.Group>
+            <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                <Stack.Screen name="Description" component={DescriptionScreen} options={{ headerShown: false }} />
+            </Stack.Group>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
         </Stack.Navigator>
-  );
+    );
 }

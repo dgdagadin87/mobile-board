@@ -19,6 +19,7 @@ export type RootStackParamList = {
     SendAddedVideo: undefined;
     Thanks: undefined;
     NotFound: undefined;
+    Description: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, Screen>;

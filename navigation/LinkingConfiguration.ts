@@ -13,13 +13,14 @@ const linking: LinkingOptions<RootStackParamList> = {
 	prefixes: [Linking.makeUrl('/')],
 	config: {
 		screens: {
-		Root: '',
-		Login: 'login',
-		Register: 'register',
-		NewVideo: 'new_video',
-		SendAddedVideo: 'send_added_video',
-		Thanks: 'thanks',
-		NotFound: '*',
+			Root: '',
+			Login: 'login',
+			Register: 'register',
+			NewVideo: 'new_video',
+			SendAddedVideo: 'send_added_video',
+			Thanks: 'thanks',
+			Description: 'description',
+			NotFound: '*',
 		},
 	},
 };
