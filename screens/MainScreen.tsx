@@ -32,12 +32,20 @@ const getImageGabarites = (): { width: number, height: number } => {
 const gabarites: any = getImageGabarites();
 
 const VideoComponent = function(props : any) {
+	const [isEmpty, setIsEmpty] = React.useState<boolean>(false);
+	const rawCdnUrl: string = props.cdn?.cdn_url || '';
+	const cdnUrl: string = !!rawCdnUrl && rawCdnUrl.indexOf('http') === -1 ? 'https://' + rawCdnUrl : rawCdnUrl;
+
+	if (!cdnUrl) {
+		setIsEmpty(true);
+	}
+
 	const isVideoEmpty = (): boolean => {
-		return !props.cdn;
+		return !cdnUrl || isEmpty;
 	}
 
 	const renderVideo = () => {
-		if (isVideoEmpty() || !props.cdn?.cdn_url) {
+		if (isVideoEmpty()) {
 			return (
 				<View style={[ gabarites, styles.videoPreview, styles.emptyVideoContainer ]}>
 					<Text style={styles.emptyVideoText}>
@@ -47,15 +55,14 @@ const VideoComponent = function(props : any) {
 			);
 		}
 
-		const videoUrl: string = props.cdn?.cdn_url.indexOf('http') === -1 ? 'https://' + props.cdn?.cdn_url : props.cdn?.cdn_url;
-
 		return (
 			<VideoPlayer
+				errorCallback={() => setIsEmpty(true)}
 				defaultControlsVisible={true}
 				videoProps={{
 					shouldPlay: false,
 					resizeMode: Video.RESIZE_MODE_CONTAIN,
-					source: { uri: videoUrl },
+					source: { uri: cdnUrl },
 				}}
 				style={{
 					videoBackgroundColor: 'transparent',

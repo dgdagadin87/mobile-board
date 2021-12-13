@@ -19,7 +19,7 @@ export interface VideoItem {
     status: string,
     uploaded_at: string,
     user_id: string,
-    cdn?: VideoCdn,
+    cdn: VideoCdn,
 };
 
 const initialState = {
