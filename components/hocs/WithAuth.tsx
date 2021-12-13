@@ -34,7 +34,7 @@ const withAuth = (WrappedComponent: any) => {
 				});
 			}
 			else {
-				this.props.navigation.navigate('Login');
+				this.props.navigation.navigate('Slider');
 			}
 		};
 

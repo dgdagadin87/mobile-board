@@ -13,6 +13,7 @@ declare global {
 
 export type RootStackParamList = {
     Root: undefined;
+    Slider: undefined;
     Login: undefined;
     Register: undefined;
     NewVideo: undefined;

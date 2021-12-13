@@ -36,6 +36,7 @@
     "react-native": "0.64.2",
     "react-native-bouncy-checkbox": "^2.1.7",
     "react-native-camera": "^4.2.1",
+    "react-native-image-slider-box": "^1.1.12",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-mask-text": "^0.5.0",
     "react-native-safe-area-context": "3.3.2",

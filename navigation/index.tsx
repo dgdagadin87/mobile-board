@@ -13,6 +13,7 @@ import MainScreen from '../screens/MainScreen';
 import DescriptionScreen from '../screens/DescriptionScreen';
 import NewVideoScreen from '../screens/NewVideoScreen';
 import SendAddedVideoScreen from '../screens/SendAddedVideoScreen';
+import SliderScreen from '../screens/SliderScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -43,6 +44,7 @@ function RootNavigator() {
                 <Stack.Screen name="Root" component={MainScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="NewVideo" component={NewVideoScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="SendAddedVideo" component={SendAddedVideoScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Slider" component={SliderScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Thanks" component={ThanksScreen} options={{ headerShown: false }} />

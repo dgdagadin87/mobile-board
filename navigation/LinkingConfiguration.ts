@@ -14,6 +14,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 	config: {
 		screens: {
 			Root: '',
+			Slider: 'slider',
 			Login: 'login',
 			Register: 'register',
 			NewVideo: 'new_video',
