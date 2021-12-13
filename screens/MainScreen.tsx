@@ -91,7 +91,7 @@ const VideoComponent = function(props : any) {
 					{ props.description }
 				</Text>
 				<TouchableOpacity
-					style={{ textAlign: 'right', width: '100%' }}
+					style={{ width: '100%' }}
 					onPress={() => props.onOpenModal(props.description)}
 				>
 					<Text style={{ marginTop: 5, textAlign: 'right', fontSize: 15, textDecorationLine: 'underline' }}>
