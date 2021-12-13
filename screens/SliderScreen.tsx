@@ -2,10 +2,6 @@ import * as React from 'react';
 // @ts-ignore
 import { SliderBox } from 'react-native-image-slider-box';
 import PlatformService from '../services/platform-service';
-import {
-	StyleSheet,
-} from 'react-native';
-
 
 class SliderScreen extends React.Component<any, any> {
 	private platform = PlatformService;
@@ -36,11 +32,11 @@ class SliderScreen extends React.Component<any, any> {
 	render() {
 		return (
 			<SliderBox
-				ImageComponentStyle={{  }}
 				images={this.state.images}
-				sliderBoxHeight={this.platform.height}
+				sliderBoxHeight={this.platform.height*(this.platform.isIos ? 1 : 1.05)}
 				dotStyle={{ width: 0, height: 0 }}
 				currentImageEmitter={this.onSlideHandler}
+				resizeMode="cover"
 			/>
 		);
 	}

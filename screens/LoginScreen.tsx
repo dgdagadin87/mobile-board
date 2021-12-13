@@ -83,7 +83,7 @@ class LoginScreen extends React.Component<Props, any> {
 		const { login, password } = this.props;
 
 		return (
-			<View style={[styles.container, { height: this.platform.height } ]}>
+			<View style={[styles.container, { height: this.platform.height*(this.platform.isIos ? 1 : 1.05) } ]}>
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
