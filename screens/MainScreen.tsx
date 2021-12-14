@@ -166,10 +166,14 @@ class MainScreen extends React.Component<any, any> {
 	}
 
 	async setVideos(): Promise<void> {
+		if (this.state.isLoading) {
+			return;
+		}
+
 		this.setState({ isLoading: true });
 		try {
 			const response: VideoItem[] = await this.api.getVideos();
-			this.setState({ isLoading: false })
+			this.setState({ isLoading: false });
 			this.props.actions.setVideosList(response);
 		}
 		catch(error) {
@@ -407,6 +411,7 @@ const styles = StyleSheet.create({
 	emptyDescription: {
 		fontSize: 12,
 		marginTop: 15,
+		marginBottom: 15,
 		textAlign: 'center',
 		color: 'grey',
 	},

@@ -82,6 +82,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 const styles = StyleSheet.create({
 	label: {
 		marginLeft: '15%',
+		width: '70%',
 		color: '#333',
 		fontSize: 15,
 		fontWeight: 'bold',

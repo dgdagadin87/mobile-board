@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
 	emptyDescription: {
 		fontSize: 18,
 		marginTop: 15,
+		marginBottom: 15,
 		textAlign: 'center',
 		color: 'grey',
 	},
