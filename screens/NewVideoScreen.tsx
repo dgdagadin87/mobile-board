@@ -10,7 +10,8 @@ import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
 
-const VIDEO_LIMIT: number = 59;
+const VIDEO_LIMIT_SEC: number = 59;
+const PREPARE_TIME_SEC: number = 3;
 
 const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
@@ -40,6 +41,7 @@ const VideoTimer = (props: any) => {
 
 class NewVideoScreen extends React.Component<any, any> {
 	private cameraRef: any = null;
+	private prepareInterval: any = null;
 
 	private file = FileService;
 
@@ -58,9 +60,11 @@ class NewVideoScreen extends React.Component<any, any> {
 		this.state = {
 			isLandscape: false,
 			isRecording: false,
+			isPreparing: false,
 			hasPermissions: false,
 			onStopRecordingClicked: false,
 			cameraType: Camera.Constants.Type.back,
+			preparingTime: PREPARE_TIME_SEC,
 		};
 	}
 
@@ -72,6 +76,15 @@ class NewVideoScreen extends React.Component<any, any> {
 
 	async componentWillUnmount() {
 		ScreenOrientation.removeOrientationChangeListeners();
+	}
+
+	async componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>) {
+		const prevIsPreparing: boolean = prevState.isPreparing;
+		const currIsPreparing: boolean = this.state.isPreparing;
+
+		if (prevIsPreparing && !currIsPreparing) {
+			await this.startVideoRecording();
+		}
 	}
 
 	deleteVideoIfExists(): void {
@@ -102,22 +115,22 @@ class NewVideoScreen extends React.Component<any, any> {
 		}
 	}
 
-	async onStartVideoClick() {
-		const stopRecording = () => {
-			this.setState(
-				{ isRecording: false },
-				() => {
-					this.cameraRef.stopRecording();
-				}
-			);
-		};
+	stopVideoRecording () {
+		this.setState(
+			{ isRecording: false },
+			() => {
+				this.cameraRef.stopRecording();
+			}
+		);
+	};
 
+	async startVideoRecording() {
 		if (!this.state.isRecording) {
 			setTimeout(() => {
 				if (this.state.isRecording) {
-					stopRecording();
+					this.stopVideoRecording();
 				}
-			}, VIDEO_LIMIT * 1000);
+			}, VIDEO_LIMIT_SEC * 1000);
 			this.setState(
 				{ isRecording: true },
 				async () => {
@@ -128,9 +141,29 @@ class NewVideoScreen extends React.Component<any, any> {
 				}
 			);
 		}
-		else {
-			stopRecording();
+	}
+
+	async onStartVideoClick() {
+		if (this.state.isRecording) {
+			this.stopVideoRecording();
+			return;
 		}
+
+		this.setState({ isPreparing: true });
+
+		this.prepareInterval = setInterval(() => {
+			this.setState(
+				{ preparingTime: (this.state.preparingTime - 1) },
+				() => {
+					if (this.state.preparingTime === 0) {
+						this.setState(
+							{ isPreparing: false },
+							() => clearInterval(this.prepareInterval)
+						);
+					}
+				}
+			);
+		}, 1000);
 	};
 
 	goBackClick() {
@@ -151,16 +184,21 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderBackLink() {
+		if (this.state.isPreparing) {
+			return null;
+		}
+
 		return (
-			<Text onPress={this.goBackClick} style={styles.returnBack}>
-				{"\<"}&nbsp;Вернуться
-			</Text>
+			<View style={styles.returnBackContainer}>
+				<Text onPress={this.goBackClick} style={styles.returnBack}>
+					{"\<"}&nbsp;Вернуться
+				</Text>
+			</View>
 		);
 	}
 
 	renderBanner() {
-		console.log(this.props.video)
-		if (this.state.isLandscape || this.state.isRecording) {
+		if (this.state.isLandscape || this.state.isRecording || this.state.isPreparing) {
 			return null;
 		}
 
@@ -182,7 +220,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderVideoButton() {
-		if (!this.state.isLandscape) {
+		if (!this.state.isLandscape || this.state.isPreparing) {
 			return null;
 		}
 
@@ -202,7 +240,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderFlipButton() {
-		if (!this.state.isLandscape || this.state.isRecording) {
+		if (!this.state.isLandscape || this.state.isRecording || this.state.isPreparing) {
 			return null;
 		}
 
@@ -219,12 +257,24 @@ class NewVideoScreen extends React.Component<any, any> {
 		);
 	}
 
+	renderPreparingTime() {
+		if (!this.state.isPreparing) {
+			return null;
+		}
+
+		return (
+			<View style={{backgroundColor: 'transparent', alignSelf: 'center',}}>
+				<Text style={{color: 'red', fontSize: 100, backgroundColor: 'transparent'}}>{this.state.preparingTime}</Text>
+			</View>
+		);
+	}
+
 	render() {
 		const { hasPermissions = false } = this.state;
 
 		if (!hasPermissions) {
 			return (
-				<View style={[styles.banner, { marginTop: 45 }]}>
+				<View style={[styles.banner]}>
 					<Text style={styles.bannerTitle}>
 						Нет доступа к камере/микрофону
 					</Text>
@@ -239,7 +289,11 @@ class NewVideoScreen extends React.Component<any, any> {
 
 		return (
 			<Camera
-				style={{ flex: 1 }}
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center'
+				}}
 				ratio={'16:9'}
 				type={this.state.cameraType}
 				ref={ref => this.cameraRef = ref}
@@ -248,6 +302,7 @@ class NewVideoScreen extends React.Component<any, any> {
 				{ this.renderBanner() }
 				{ this.renderVideoButton() }
 				{ this.renderFlipButton() }
+				{ this.renderPreparingTime() }
 			</Camera>
 		);
 	}
@@ -279,10 +334,8 @@ const styles = StyleSheet.create({
 	},
 	banner: {
 		width: '90%',
-		marginLeft: '5%',
 		backgroundColor: '#969692',
 		borderRadius: 10,
-		marginTop: 300,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
@@ -330,13 +383,19 @@ const styles = StyleSheet.create({
 		color: '#ffffff',
 		textAlign: 'center',
 	},
+	returnBackContainer: {
+		backgroundColor: 'transparent',
+		alignSelf: 'flex-start',
+		position: 'absolute',
+		top: 45,
+		left: 15,
+	},
 	returnBack: {
 		color: '#ffffff',
 		textDecorationLine: 'underline',
 		textAlign: 'left',
 		width: '100%',
-		marginTop: 45,
-		marginLeft: 15
+
 	},
 	flipButton: {
 		position: 'absolute',
