@@ -20,6 +20,7 @@ import { CustomButton } from '../components/CustomButton';
 import { CustomLoader } from '../components/CustomLoader';
 import { AppLogo } from '../components/AppLogo';
 import { CustomTextInput } from '../components/CustomTextInput';
+import { CustomError } from '../components/CustomError';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
 import PlatformService from '../services/platform-service';
@@ -43,7 +44,7 @@ class RegisterScreen extends React.Component<Props, any> {
 	constructor(props: Props) {
 		super(props);
 
-		this.state = { isLoading: false };
+		this.state = { isLoading: false, error: '' };
 
 		this.onRegister = this.onRegister.bind(this);
 		this.changeLogin = this.changeLogin.bind(this);
@@ -62,19 +63,19 @@ class RegisterScreen extends React.Component<Props, any> {
 	}
 
 	changeLogin(text: string) {
-		this.props.actions.changeLogin(text);
+		this.setState({ error: '' }, () => this.props.actions.changeLogin(text));
 	}
 
 	changePassword(text: string) {
-		this.props.actions.changePassword(text);
+		this.setState({ error: '' }, () => this.props.actions.changePassword(text));
 	}
 
 	changeName(text: string): void {
-		this.props.actions.changeName(text);
+		this.setState({ error: '' }, () => this.props.actions.changeName(text));
 	}
 
 	changeMail(text: string): void {
-		this.props.actions.changeMail(text);
+		this.setState({ error: '' }, () => this.props.actions.changeMail(text));
 	}
 
 	changeUserDataAgreement(value: boolean): void {
@@ -102,13 +103,24 @@ class RegisterScreen extends React.Component<Props, any> {
 			this.alert.alert('Успех', 'Вы успешно зарегистрировались в системе');
 		}
 		catch(err) {
-			this.setState({ isLoading: false });
+			const errorResponse: any = err.response || {};
+			const errorData: any = errorResponse.data || {};
+			const errorText: string = errorData.detail || '';
+			this.setState({ isLoading: false, error: errorText });
 			this.alert.alert('Ошибка', 'Что-то пошло не так');
 		}
 	}
 
 	login(): void {
 		this.props.navigation.navigate('Login');
+	}
+
+	renderError() {
+		if (!this.state.error) {
+			return null;
+		}
+
+		return <CustomError error={this.state.error} />;
 	}
 
 	renderMain() {
@@ -173,6 +185,8 @@ class RegisterScreen extends React.Component<Props, any> {
 						style={styles.checkbox1}
 						onPress={(isChecked: boolean) => this.changeUserOfferAgreement(isChecked)}
 					/>
+
+					{ this.renderError() }
 
 					<CustomButton
 						buttonText="Создать аккаунт"

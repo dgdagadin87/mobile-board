@@ -14,6 +14,7 @@ import { Text, View } from '../components/Themed';
 import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
 import { CustomTextInput } from '../components/CustomTextInput';
+import { CustomError } from '../components/CustomError';
 import { CustomLoader } from '../components/CustomLoader';
 import { AppLogo } from '../components/AppLogo';
 
@@ -33,7 +34,7 @@ class LoginScreen extends React.Component<Props, any> {
 	constructor(props: Props) {
 		super(props);
 
-		this.state = { isLoading: false };
+		this.state = { isLoading: false, error: '' };
 
 		this.onLogin = this.onLogin.bind(this);
 		this.changeLogin = this.changeLogin.bind(this);
@@ -50,11 +51,11 @@ class LoginScreen extends React.Component<Props, any> {
 	}
 
 	changeLogin(text: string) {
-		this.props.actions.changeLogin(text);
+		this.setState({ error: '' }, () => this.props.actions.changeLogin(text));
 	}
 
 	changePassword(text: string) {
-		this.props.actions.changePassword(text);
+		this.setState({ error: '' }, () => this.props.actions.changePassword(text));
 	}
 
 	async onLogin(): Promise<void> {
@@ -70,13 +71,24 @@ class LoginScreen extends React.Component<Props, any> {
 			this.props.navigation.navigate('Root');
 		}
 		catch(err) {
-			this.setState({ isLoading: false });
+			const errorResponse: any = err.response || {};
+			const errorData: any = errorResponse.data || {};
+			const errorText: string = errorData.detail || '';
+			this.setState({ isLoading: false, error: errorText });
 			this.alert.alert('Ошибка', 'Что-то пошло не так');
 		}
 	}
 
 	register(): void {
 		this.props.navigation.navigate('Register');
+	}
+
+	renderError() {
+		if (!this.state.error) {
+			return null;
+		}
+
+		return <CustomError error={this.state.error} />;
 	}
 
 	renderMain() {
@@ -101,6 +113,8 @@ class LoginScreen extends React.Component<Props, any> {
 						value={password}
 						onChangeValue={this.changePassword}
 					/>
+
+					{ this.renderError() }
 
 					<CustomButton
 						buttonText="Войти"

@@ -25,8 +25,6 @@ class ApiService {
 				})
 				.catch((error) => {
 					console.log('it is error', error);
-					const errorString: string = typeof error === 'string' ? error : JSON.stringify(error);
-					this.alertService.alert('Error', errorString);
 					reject(error);
 				});
 		});
@@ -46,8 +44,6 @@ class ApiService {
 				})
 				.catch((error) => {
 					console.log('it is error', error);
-					const errorString: string = typeof error === 'string' ? error : JSON.stringify(error);
-					this.alertService.alert('Error', errorString);
 					reject(error);
 				});
         });
