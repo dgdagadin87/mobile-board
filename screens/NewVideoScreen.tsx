@@ -10,9 +10,10 @@ import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
 
+const VIDEO_LIMIT: number = 59;
+
 const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
-
 	const { isRecording = true } = props;
 
 	React.useEffect(() => {
@@ -59,7 +60,7 @@ class NewVideoScreen extends React.Component<any, any> {
 			isRecording: false,
 			hasPermissions: false,
 			onStopRecordingClicked: false,
-			cameraType: Camera.Constants.Type.back
+			cameraType: Camera.Constants.Type.back,
 		};
 	}
 
@@ -102,8 +103,21 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	async onStartVideoClick() {
+		const stopRecording = () => {
+			this.setState(
+				{ isRecording: false },
+				() => {
+					this.cameraRef.stopRecording();
+				}
+			);
+		};
 
 		if (!this.state.isRecording) {
+			setTimeout(() => {
+				if (this.state.isRecording) {
+					stopRecording();
+				}
+			}, VIDEO_LIMIT * 1000);
 			this.setState(
 				{ isRecording: true },
 				async () => {
@@ -115,12 +129,7 @@ class NewVideoScreen extends React.Component<any, any> {
 			);
 		}
 		else {
-			this.setState(
-				{ isRecording: false },
-				() => {
-					this.cameraRef.stopRecording();
-				}
-			);
+			stopRecording();
 		}
 	};
 
