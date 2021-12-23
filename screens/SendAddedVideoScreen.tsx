@@ -145,6 +145,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         return (
             <View style={styles.video}>
                 <VideoPlayer
+                    errorCallback={(err) => console.log('Playing error: ', err)}
                     defaultControlsVisible={true}
                     videoProps={{
                         shouldPlay: false,

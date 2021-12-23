@@ -70,6 +70,7 @@ class NewVideoScreen extends React.Component<any, any> {
 
 	async componentDidMount() {
 		await this.setPermissions();
+		await this.onChangeOrientationListener();
 
 		ScreenOrientation.addOrientationChangeListener(this.onChangeOrientationListener);
 	}
@@ -102,11 +103,17 @@ class NewVideoScreen extends React.Component<any, any> {
 		this.setState({ hasPermissions: microphoneStatus === 'granted' && cameraStatus === 'granted' });
 	}
 
-	onChangeOrientationListener(event: any = {}) {
-		const { orientationInfo = {} } = event;
-		const orientation: number = orientationInfo.orientation;
+	async onChangeOrientationListener(event: any = {}) {
 		const OrientationContainer = ScreenOrientation.Orientation;
-
+		let orientation: number = 0;
+		if (!!event) {
+			const { orientationInfo = {} } = event;
+			orientation = orientationInfo.orientation;
+		}
+		else {
+			orientation = await ScreenOrientation.getOrientationAsync();
+		}
+console.log(orientation)
 		if ([OrientationContainer.LANDSCAPE_LEFT, OrientationContainer.LANDSCAPE_RIGHT].indexOf(orientation) !== -1) {
 			this.setState({ isLandscape: true });
 		}
@@ -137,7 +144,7 @@ class NewVideoScreen extends React.Component<any, any> {
 					const video: any = await this.cameraRef.recordAsync();
 					this.props.actions.setVideoData(video);
 					this.props.actions.setEmptyAddVideoForm();
-					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 2000);
+					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 2500);
 				}
 			);
 		}
@@ -184,16 +191,15 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	renderBackLink() {
-		if (this.state.isPreparing) {
-			return null;
-		}
-
 		return (
-			<View style={styles.returnBackContainer}>
-				<Text onPress={this.goBackClick} style={styles.returnBack}>
+			<TouchableOpacity
+				onPress={this.goBackClick}
+				style={styles.returnBackContainer}
+			>
+				<Text style={styles.returnBack}>
 					{"\<"}&nbsp;Вернуться
 				</Text>
-			</View>
+			</TouchableOpacity>
 		);
 	}
 
