@@ -54,7 +54,11 @@ class SendAddedVideoScreen extends React.Component<any, any> {
             activityType = ''
         } = this.props;
 
-        return filmName + ', ' + efirDate + ', ' + videoDescription + ',' + countryCityFrom + ', ' + activityType;
+        return 'Название фильма: '      + filmName         + ', ' +
+                'Дата эфира: '          + efirDate         + ', ' +
+                'О чем рассказываете: ' + videoDescription + ',' +
+                'Откуда вы: '           + countryCityFrom  + ', ' +
+                'Род деятельности: '    + activityType;
     }
 
     get isButtonDisabled(): boolean {

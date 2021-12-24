@@ -113,7 +113,7 @@ class NewVideoScreen extends React.Component<any, any> {
 		else {
 			orientation = await ScreenOrientation.getOrientationAsync();
 		}
-console.log(orientation)
+
 		if ([OrientationContainer.LANDSCAPE_LEFT, OrientationContainer.LANDSCAPE_RIGHT].indexOf(orientation) !== -1) {
 			this.setState({ isLandscape: true });
 		}
