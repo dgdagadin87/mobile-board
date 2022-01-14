@@ -10,7 +10,7 @@ import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
 
-const VIDEO_LIMIT_SEC: number = 59;
+const VIDEO_LIMIT_SEC: number = 63;
 const PREPARE_TIME_SEC: number = 3;
 
 const VideoTimer = (props: any) => {
@@ -31,7 +31,7 @@ const VideoTimer = (props: any) => {
 	}, [seconds]);
 
 	return (
-		<View style={styles.timerView}>
+		<View style={[styles.timerView, { right: seconds > 9 ? '-30%' : '-40%' }]}>
 			<Text style={styles.timerText}>
 				{seconds}
 			</Text>
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
 	},
 	timerView: {
 		position: 'absolute',
-		top: '33%',
+		top: '32%',
 		right: '-40%',
 		width: 100,
 		height: 87.4,
