@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#999999',
 		borderStyle: 'solid',
-		borderRadius: 3
+		borderRadius: 3,
+		textAlignVertical: 'top'
 	},
 });
