@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
 	emptyContainer: {
 		position: 'relative',
 		marginTop: 105,
+		paddingBottom: 15,
 		width: '90%',
 		marginLeft: '5%',
 		height: 250,

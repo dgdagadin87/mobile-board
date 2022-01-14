@@ -11,7 +11,7 @@ import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
 
 const VIDEO_LIMIT_SEC: number = 63;
-const PREPARE_TIME_SEC: number = 3;
+const PREPARE_TIME_SEC: number = 5;
 
 const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
@@ -144,7 +144,7 @@ class NewVideoScreen extends React.Component<any, any> {
 					const video: any = await this.cameraRef.recordAsync();
 					this.props.actions.setVideoData(video);
 					this.props.actions.setEmptyAddVideoForm();
-					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 2500);
+					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 1500);
 				}
 			);
 		}
@@ -164,7 +164,7 @@ class NewVideoScreen extends React.Component<any, any> {
 				() => {
 					if (this.state.preparingTime === 0) {
 						this.setState(
-							{ isPreparing: false },
+							{ isPreparing: false, preparingTime: PREPARE_TIME_SEC },
 							() => clearInterval(this.prepareInterval)
 						);
 					}
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
 	},
 	timerView: {
 		position: 'absolute',
-		top: '32%',
+		top: '27%',
 		right: '-40%',
 		width: 100,
 		height: 87.4,
