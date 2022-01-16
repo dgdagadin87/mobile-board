@@ -10,7 +10,7 @@ import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
 
-const VIDEO_LIMIT_SEC: number = 63;
+const VIDEO_LIMIT_SEC: number = 61;
 const PREPARE_TIME_SEC: number = 5;
 
 const VideoTimer = (props: any) => {
