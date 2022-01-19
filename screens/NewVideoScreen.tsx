@@ -16,13 +16,16 @@ const PREPARE_TIME_SEC: number = 5;
 const VideoTimer = (props: any) => {
 	const [seconds, setSeconds] = React.useState(1);
 	const { isRecording = true } = props;
+	let interval: any = null;
 
 	React.useEffect(() => {
-		let interval: any = null;
 		if (isRecording) {
-			interval = setInterval(() => {
-				setSeconds(seconds => seconds + 1);
-			}, 1000);
+			if (!interval) {
+				interval = setInterval(() => {
+					setSeconds(seconds => seconds + 1);
+				}, 1000);
+			}
+
 		}
 		else if (!isRecording && seconds !== 1) {
 			clearInterval(interval);
