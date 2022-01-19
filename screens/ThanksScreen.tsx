@@ -54,10 +54,8 @@ const styles = StyleSheet.create({
 	emptyContainer: {
 		position: 'relative',
 		marginTop: 105,
-		paddingBottom: 15,
 		width: '90%',
 		marginLeft: '5%',
-		height: 250,
 		backgroundColor: '#Bdd2d8',
 		shadowColor: "#000",
 		shadowOffset: {
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
 	emptyDescription: {
 		fontSize: 18,
 		marginTop: 15,
-		marginBottom: 15,
+		marginBottom: 25,
 		textAlign: 'center',
 		color: 'grey',
 	},
