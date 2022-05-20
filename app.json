@@ -12,6 +12,14 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+	"plugins": [
+		[
+		  "expo-image-picker",
+			{
+				"photosPermission": "Приложение запрашивает доступ к фотогаллерее"
+			}
+		]
+	],
     "updates": {
       "fallbackToCacheTimeout": 0
     },

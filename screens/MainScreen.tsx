@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { connect } from 'react-redux';
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
@@ -15,11 +16,14 @@ import { Text, View } from '../components/Themed';
 import { CustomLoader } from '../components/CustomLoader';
 import WithAuth from '../components/hocs/WithAuth';
 import { setUserData, setVideosList, setDescription } from '../redux/actions/main';
+import { setVideoData, setEmptyAddVideoForm } from '../redux/actions/newVideo';
 import { VideoItem } from '../redux/reducers/mainReducer';
 import AuthService from '../services/auth-service';
 import ApiService from '../services/api-service';
 import AlertService from '../services/alert-service';
 import PlatformService from '../services/platform-service';
+
+const MAX_VIDEO_DURATION_SECS: number = 60;
 
 const platform = PlatformService;
 
@@ -130,6 +134,7 @@ class MainScreen extends React.Component<any, any> {
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
 		this.onHelpClick = this.onHelpClick.bind(this);
+		this.onAddFromGalleryClick = this.onAddFromGalleryClick.bind(this);
 		this.onShowDescription = this.onShowDescription.bind(this);
 	}
 
@@ -147,6 +152,27 @@ class MainScreen extends React.Component<any, any> {
 		await this.auth.exit();
 		this.props.navigation.navigate('Login');
 		//this.alert.alert('Помощь', 'Это кнопка помощи');
+	}
+
+	async onAddFromGalleryClick() {
+		let result: any = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+	  
+		if (!result.cancelled) {
+			const videoDuration: number = result.duration / 1000;
+			if (videoDuration > MAX_VIDEO_DURATION_SECS) {
+				this.alert.alert('Ошибка', 'Можно загрузить видео длиной максимум 1 минуту');
+				return;
+			}
+
+			this.props.actions.setVideoData(result);
+			this.props.actions.setEmptyAddVideoForm();
+			setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 1500);
+		}
 	}
 
 	onNewVideoClick() {
@@ -260,6 +286,7 @@ class MainScreen extends React.Component<any, any> {
 						style={styles.helpIcon}
 					/>
 					<Text onPress={this.onHelpClick} style={styles.helpText}>Помощь</Text>
+					<Text onPress={this.onAddFromGalleryClick} style={styles.galleryText}>Добавить из галереи</Text>
 
 					<View style={styles.newVideoBlock}>
 						<View style={styles.newVideoLine}></View>
@@ -286,13 +313,14 @@ class MainScreen extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state: any) => ({
+	video: state.newVideoData.video,
 	user: state.mainData.user,
 	videos: state.mainData.videos,
 });
 
 const ActionCreators = Object.assign(
 	{},
-	{ setUserData, setVideosList, setDescription }
+	{ setUserData, setVideosList, setDescription, setVideoData, setEmptyAddVideoForm }
 );
 const mapDispatchToProps = (dispatch: any) => ({
 	actions: bindActionCreators(ActionCreators, dispatch),
@@ -342,6 +370,14 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 175,
 		left: 50,
+		fontSize: 15,
+		textDecorationLine: 'underline',
+		color: 'white',
+	},
+	galleryText: {
+		position: 'absolute',
+		top: 200,
+		left: 25,
 		fontSize: 15,
 		textDecorationLine: 'underline',
 		color: 'white',
