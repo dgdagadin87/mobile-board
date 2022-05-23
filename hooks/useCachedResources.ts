@@ -3,6 +3,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 
 export async function checkMultiPermissions(): Promise<void> {
 	const { status: cameraStatus1 } = await Camera.getCameraPermissionsAsync();
@@ -18,6 +19,14 @@ export async function checkMultiPermissions(): Promise<void> {
 		const { status: microStatus2 } = await Camera.requestMicrophonePermissionsAsync();
 		if (microStatus2 !== 'granted') {
 			alert('Нет доступа к микрофону');
+		}
+	}
+
+	const { status: galleryStatus1 } = await ImagePicker.getMediaLibraryPermissionsAsync();
+	if (galleryStatus1 !== 'granted') {
+		const { status: galleryStatus2 } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (galleryStatus2 !== 'granted') {
+			alert('Нет доступа к галерее');
 		}
 	}
 }
