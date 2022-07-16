@@ -7,14 +7,7 @@ export const CustomLoader = () => {
     return (
         <View style={styles.container}>
             <ActivityIndicator size="large" color="#0099cc" />
-            <Text style={{
-                color: '#0099cc',
-                opacity: 1,
-                fontSize: 20,
-                fontWeight: 'bold',
-                textAlign: 'center',
-                width: '100%',
-            }}>Подождите, идет загрузка...</Text>
+            <Text style={styles.text}>Подождите, идет загрузка...</Text>
             
         </View>
     );
@@ -34,4 +27,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         opacity: .9,
     },
+    text: {
+        color: '#0099cc',
+        opacity: 1,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        width: '100%',
+    }
 });
