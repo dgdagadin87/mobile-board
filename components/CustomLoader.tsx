@@ -1,12 +1,21 @@
 import * as React from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
-import { View } from './Themed';
+import { View, Text } from './Themed';
 import platform from '../services/platform-service';
 
 export const CustomLoader = () => {
     return (
         <View style={styles.container}>
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="large" color="#0099cc" />
+            <Text style={{
+                color: '#0099cc',
+                opacity: 1,
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                width: '100%',
+            }}>Подождите, идет загрузка...</Text>
+            
         </View>
     );
 };
@@ -21,9 +30,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
         height: (platform.height*1.3),
-        flexDirection: 'row',
         padding: 10,
         backgroundColor: '#ffffff',
-        opacity: .5,
+        opacity: .9,
     },
 });

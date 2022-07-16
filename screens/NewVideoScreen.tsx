@@ -9,6 +9,7 @@ import { View, Text } from '../components/Themed';
 import WithAuth from '../components/hocs/WithAuth';
 import WithScreenRotation from '../components/hocs/WithScreenRotation';
 import FileService from '../services/file-service';
+import PlatformService from '../services/platform-service';
 
 const VIDEO_LIMIT_SEC: number = 61;
 const PREPARE_TIME_SEC: number = 5;
@@ -47,6 +48,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	private prepareInterval: any = null;
 
 	private file = FileService;
+	private platform = PlatformService;
 
 	constructor(props: any) {
 		super(props);
@@ -303,7 +305,7 @@ class NewVideoScreen extends React.Component<any, any> {
 					alignItems: 'center',
 					justifyContent: 'center'
 				}}
-				ratio={'16:9'}
+				ratio={this.platform.width + ':' + this.platform.height}
 				type={this.state.cameraType}
 				ref={ref => this.cameraRef = ref}
 			>
