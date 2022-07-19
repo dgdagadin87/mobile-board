@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         flex: 1,
-        zIndex: 100,
+        zIndex: 1000000,
         justifyContent: 'center',
         width: '100%',
         height: (platform.height*1.3),

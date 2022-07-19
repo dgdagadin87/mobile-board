@@ -62,6 +62,7 @@ class NewVideoScreen extends React.Component<any, any> {
 		this.onFlipClick = this.onFlipClick.bind(this);
 
 		this.state = {
+			ratio: '4:3',
 			isLandscape: false,
 			isRecording: false,
 			isPreparing: false,
@@ -280,7 +281,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	render() {
-		const { hasPermissions = false } = this.state;
+		const { hasPermissions = false, ratio } = this.state;
 
 		if (!hasPermissions) {
 			return (
@@ -304,9 +305,40 @@ class NewVideoScreen extends React.Component<any, any> {
 					alignItems: 'center',
 					justifyContent: 'center'
 				}}
-				ratio={this.platform.width + ':' + this.platform.height}
+				ratio={ratio}
 				type={this.state.cameraType}
 				ref={ref => this.cameraRef = ref}
+				onCameraReady={async () => {
+					if (!this.platform.isIos) {
+						const getNearestRatio = (screenRatio: number, ratios = []) => {
+							let nearest = '4:3';
+							if (!ratios || !Array.isArray(ratios) || ratios.length < 1) {
+								return nearest;
+							}
+							let preparedRatios: any = {};
+							ratios.forEach((value: string) => {
+								const values: number[] = value.split(':').map(str => parseInt(str));
+								const result = values[0] / values[1];
+								preparedRatios[result] = value;
+							});
+
+							const closest = Object.keys(preparedRatios).reduce((a:string, b:string) => {
+								return Math.abs(parseFloat(b) - screenRatio) < Math.abs(parseFloat(a) - screenRatio) ? b : a;
+							})
+
+							return preparedRatios[closest];
+						}
+
+						try {
+							const screenRatio = this.platform.height / this.platform.width;
+							const ratios = await this.cameraRef.getSupportedRatiosAsync();
+							this.setState({ ratio: getNearestRatio(screenRatio, ratios) });
+							
+						}
+						catch{}
+						
+					}
+				}}
 			>
 				{ this.renderBackLink() }
 				{ this.renderBanner() }
@@ -418,6 +450,7 @@ const styles = StyleSheet.create({
 	flipText: {
 		textTransform: 'uppercase',
 		fontSize: 16,
+		color: 'black'
 	},
 	startVideoButton: {
 		position: 'absolute',
