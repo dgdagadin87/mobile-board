@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 	input: {
 		width: '70%',
 		backgroundColor: '#fff',
-		padding: 7,
+		padding: 5,
 		marginLeft: '15%',
 		marginBottom: 10,
 		marginTop: 5,

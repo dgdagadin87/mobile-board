@@ -26,7 +26,6 @@ const VideoTimer = (props: any) => {
 					setSeconds(seconds => seconds + 1);
 				}, 1000);
 			}
-
 		}
 		else if (!isRecording && seconds !== 1) {
 			clearInterval(interval);

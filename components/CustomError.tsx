@@ -7,7 +7,7 @@ export type CustomErrorProps = {
 
 export const ErrorNames: { [key: string]: string } = {
 	'name.ensure this value has at least 3 characters': 'Имя должно содержать как минимум 3 cимвола',
-	'email.value is not a valid email address': 'Электронная почта должна быть валидной',
+	'email.value is not a valid email address': 'Электронная почта должна быть действительной',
 	'username.ensure this value has at least 3 characters': 'Имя пользователя должно содержать как минимум 3 cимвола',
 	'password.ensure this value has at least 8 characters': 'Пароль должен содержать как минимум 8 символов',
 };

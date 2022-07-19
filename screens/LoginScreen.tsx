@@ -95,20 +95,20 @@ class LoginScreen extends React.Component<Props, any> {
 		const { login, password } = this.props;
 
 		return (
-			<View style={[styles.container, { height: this.platform.height*(this.platform.isIos ? 1 : 1.05) } ]}>
+			<View style={[styles.container, { height: this.platform.height } ]}>
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
 					<CustomTextInput
 						labelText="Введите почту"
-						placeholderText="Она будет служить логином для входа"
+						placeholderText="Введите почту"
 						isPassword={false}
 						value={login}
 						onChangeValue={this.changeLogin}
 					/>
 					<CustomTextInput
 						labelText="Введите пароль"
-						placeholderText="По нему вас будут узнавать телезрители"
+						placeholderText="Введите пароль"
 						isPassword={true}
 						value={password}
 						onChangeValue={this.changePassword}

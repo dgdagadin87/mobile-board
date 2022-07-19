@@ -127,11 +127,11 @@ class RegisterScreen extends React.Component<Props, any> {
 		const { login, password, name, mail, userDataAgreement, userOfferAgreement } = this.props;
 
 		return (
-			<View style={[styles.container, { height: this.platform.height*(this.platform.isIos ? 1 : 1.05) } ]}>
+			<View style={[styles.container, { height: this.platform.height } ]}>
 				<ImageBackground source={require('../assets/images/auth_bg.png')} resizeMode="cover" style={styles.image}>
 					<AppLogo />
 
-					<View style={{ marginTop: 50 }} />
+					<View style={{ marginTop: this.platform.height*.28 }} />
 
 					<CustomTextInput
 						labelText="Как вас зовут?"
@@ -251,13 +251,12 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		flex: 1,
-		justifyContent: "center",
 		width: '100%',
-		height: '100%'
+		height: '100%',
 	},
 	bottom: {
 		position: 'absolute',
-		bottom: 0,
+		bottom: -10,
 		left: 0,
 		width: '100%',
 		backgroundColor: 'transparent',
