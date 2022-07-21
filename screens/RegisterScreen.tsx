@@ -102,7 +102,7 @@ class RegisterScreen extends React.Component<Props, any> {
 			this.setState({ isLoading: false });
 			this.alert.alert('Успех', 'Вы успешно зарегистрировались в системе');
 		}
-		catch(err) {
+		catch(err: any) {
 			const errorResponse: any = err.response || {};
 			const errorData: any = errorResponse.data || {};
 			const errorText: string = errorData.detail || '';

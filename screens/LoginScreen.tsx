@@ -71,7 +71,7 @@ class LoginScreen extends React.Component<Props, any> {
 			this.props.navigation.navigate('Root');
 		}
 		catch(err) {
-			const errorResponse: any = err.response || {};
+			const errorResponse: any = (err as any).response || {};
 			const errorData: any = errorResponse.data || {};
 			const errorText: string = errorData.detail || '';
 			this.setState({ isLoading: false, error: errorText });

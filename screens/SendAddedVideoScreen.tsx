@@ -34,7 +34,15 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
 
-        this.state = { isLoading: false };
+        this.state = { isLoading: false, showVideo: true, };
+
+        this.props.navigation.addListener('focus', () => {
+			this.setState({ showVideo: true });
+		});
+
+        this.props.navigation.addListener('blur', () => {
+			this.setState({ showVideo: false });
+		});
 
         this.changeVideoName = this.changeVideoName.bind(this);
         this.changeVideoDescription = this.changeVideoDescription.bind(this);
@@ -43,6 +51,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         this.changeCountryCityFrom = this.changeCountryCityFrom.bind(this);
         this.changeActivityType = this.changeActivityType.bind(this);
         this.sendOnModeration = this.sendOnModeration.bind(this);
+        this.returnOnMain = this.returnOnMain.bind(this);
     }
 
     get fullDescription(): string {
@@ -113,6 +122,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         }
     }
 
+    returnOnMain() {
+        this.props.navigation.navigate('Root');
+    }
+
     showError() {
         this.alert.alert('Ошибка', 'При отправке видео возникла ошибка');
     }
@@ -142,7 +155,7 @@ class SendAddedVideoScreen extends React.Component<any, any> {
     }
 
     renderVideoPlayer() {
-        if (!this.props.video) {
+        if (!this.props.video || !this.state.showVideo) {
             return null;
         }
 
@@ -231,10 +244,16 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                 />
 
                 <CustomButton
-                    customStyles={{ width: '100%', marginLeft: 0, marginBottom: 50 }}
+                    customStyles={{ width: '100%', marginLeft: 0, }}
                     buttonText="Отправить на модерацию"
                     isDisabled={this.isButtonDisabled}
                     onButtonClick={this.sendOnModeration}
+                />
+                <CustomButton
+                    customStyles={{ width: '100%', marginLeft: 0, marginBottom: 50 }}
+                    buttonText="Отмена"
+                    isDisabled={false}
+                    onButtonClick={this.returnOnMain}
                 />
             </View>
         );

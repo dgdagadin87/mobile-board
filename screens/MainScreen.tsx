@@ -130,6 +130,7 @@ class MainScreen extends React.Component<any, any> {
 		this.state = { isLoading: false };
 
 		props.navigation.addListener('focus', async () => await this.setVideos());
+		props.navigation.addListener('blur', async () => await this.clearVideos());
 
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
@@ -206,6 +207,10 @@ class MainScreen extends React.Component<any, any> {
 			await this.alert.alert('Ошибка', 'Что-то пошло не так');
 			this.setState({ isLoading: false });
 		}
+	}
+
+	async clearVideos(): Promise<void> {
+		this.props.actions.setVideosList([]);
 	}
 
 	renderEmptyVideoMessage() {

@@ -60,6 +60,7 @@ class NewVideoScreen extends React.Component<any, any> {
 		this.onChangeOrientationListener = this.onChangeOrientationListener.bind(this);
 		this.onStartVideoClick = this.onStartVideoClick.bind(this);
 		this.onFlipClick = this.onFlipClick.bind(this);
+		this.onCameraReady = this.onCameraReady.bind(this);
 
 		this.state = {
 			ratio: '4:3',
@@ -93,11 +94,11 @@ class NewVideoScreen extends React.Component<any, any> {
 		}
 	}
 
-	deleteVideoIfExists(): void {
+	async deleteVideoIfExists() {
 		if (this.isVideoEmpty) {
 			return;
 		}
-		// TODO await this.file.deleteFile(this.props.video.uri);
+		await this.file.deleteFile(this.props.video.uri);
 		this.props.actions.setVideoData({});
 	}
 
@@ -146,10 +147,15 @@ class NewVideoScreen extends React.Component<any, any> {
 			this.setState(
 				{ isRecording: true },
 				async () => {
-					const video: any = await this.cameraRef.recordAsync();
-					this.props.actions.setVideoData(video);
-					this.props.actions.setEmptyAddVideoForm();
-					setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 1500);
+					try {
+						const video: any = await this.cameraRef.recordAsync();
+						this.props.actions.setVideoData(video);
+						this.props.actions.setEmptyAddVideoForm();
+						setTimeout(() => this.props.navigation.navigate('SendAddedVideo'), 500);
+					}
+					catch(err) {
+						console.log('it is error', err)
+					}
 				}
 			);
 		}
@@ -193,6 +199,37 @@ class NewVideoScreen extends React.Component<any, any> {
 		}
 
 		return false;
+	}
+
+	async onCameraReady() {
+		if (!this.platform.isIos) {
+			const getNearestRatio = (screenRatio: number, ratios = []) => {
+				let nearest = '4:3';
+				if (!ratios || !Array.isArray(ratios) || ratios.length < 1) {
+					return nearest;
+				}
+				let preparedRatios: any = {};
+				ratios.forEach((value: string) => {
+					const values: number[] = value.split(':').map(str => parseInt(str));
+					const result = values[0] / values[1];
+					preparedRatios[result] = value;
+				});
+
+				const closest = Object.keys(preparedRatios).reduce((a:string, b:string) => {
+					return Math.abs(parseFloat(b) - screenRatio) < Math.abs(parseFloat(a) - screenRatio) ? b : a;
+				})
+
+				return preparedRatios[closest];
+			}
+
+			try {
+				const screenRatio = this.platform.height / this.platform.width;
+				const ratios = await this.cameraRef.getSupportedRatiosAsync();
+				this.setState({ ratio: getNearestRatio(screenRatio, ratios) });
+				
+			}
+			catch{}
+		}
 	}
 
 	renderBackLink() {
@@ -308,37 +345,7 @@ class NewVideoScreen extends React.Component<any, any> {
 				ratio={ratio}
 				type={this.state.cameraType}
 				ref={ref => this.cameraRef = ref}
-				onCameraReady={async () => {
-					if (!this.platform.isIos) {
-						const getNearestRatio = (screenRatio: number, ratios = []) => {
-							let nearest = '4:3';
-							if (!ratios || !Array.isArray(ratios) || ratios.length < 1) {
-								return nearest;
-							}
-							let preparedRatios: any = {};
-							ratios.forEach((value: string) => {
-								const values: number[] = value.split(':').map(str => parseInt(str));
-								const result = values[0] / values[1];
-								preparedRatios[result] = value;
-							});
-
-							const closest = Object.keys(preparedRatios).reduce((a:string, b:string) => {
-								return Math.abs(parseFloat(b) - screenRatio) < Math.abs(parseFloat(a) - screenRatio) ? b : a;
-							})
-
-							return preparedRatios[closest];
-						}
-
-						try {
-							const screenRatio = this.platform.height / this.platform.width;
-							const ratios = await this.cameraRef.getSupportedRatiosAsync();
-							this.setState({ ratio: getNearestRatio(screenRatio, ratios) });
-							
-						}
-						catch{}
-						
-					}
-				}}
+				onCameraReady={ this.onCameraReady }
 			>
 				{ this.renderBackLink() }
 				{ this.renderBanner() }
