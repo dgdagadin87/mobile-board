@@ -33,10 +33,10 @@ class SliderScreen extends React.Component<any, any> {
 		return (
 			<SliderBox
 				images={this.state.images}
-				sliderBoxHeight={this.platform.height*(this.platform.isIos ? 1 : 1.05)}
+				sliderBoxHeight={this.platform.height}
 				dotStyle={{ width: 0, height: 0 }}
 				currentImageEmitter={this.onSlideHandler}
-				resizeMode="cover"
+				resizeMode="stretch"
 			/>
 		);
 	}

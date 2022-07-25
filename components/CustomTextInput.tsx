@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, TextInput } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { Text, View } from './Themed';
@@ -8,6 +9,7 @@ export type CustomTextInputProps = {
 	value: string,
 	labelText: string,
 	onChangeValue: any,
+	onClearText?: any,
 	isPassword: boolean,
 	placeholderText: string,
 	inputMask?: string,
@@ -18,6 +20,8 @@ export type CustomTextInputProps = {
 };
 
 export function CustomTextInput(props: CustomTextInputProps) {
+	const [isVisible, setIsVisible] = React.useState(false);
+
 	const {
 		customInputStyles = null,
 		customLabelStyles = null,
@@ -65,11 +69,25 @@ export function CustomTextInput(props: CustomTextInputProps) {
 
   	return (
   		<View style={{ backgroundColor: 'transparent' }}>
+			{props.onClearText && !props.isPassword ? <FontAwesome
+				name={ 'times' }
+				size={23}
+				color={ '#777' }
+				onPress={props.onClearText} 
+				style={styles.icon}
+			/> : null}
+			{props.isPassword ? <FontAwesome
+				name={ isVisible ? 'eye-slash' : 'eye' }
+				size={23}
+				color={ '#777' }
+				onPress={() => {setIsVisible(!isVisible)}} 
+				style={styles.icon}
+			/> : null}
 			{ renderLabel() }
 			<TextInput
 				multiline={isTextarea}
 				numberOfLines={isTextarea ? 5 : 1}
-				secureTextEntry={props.isPassword}
+				secureTextEntry={props.isPassword && !isVisible}
 				style={getInputStyles()}
 				onChangeText={props.onChangeValue}
 				value={props.value}
@@ -101,4 +119,14 @@ const styles = StyleSheet.create({
 		borderRadius: 3,
 		textAlignVertical: 'top'
 	},
+	icon: {
+		zIndex: 1000,
+		position: 'absolute',
+		top: 20,
+		paddingTop: 5,
+		paddingBottom: 5,
+		paddingRight: platform.width*.03,
+		paddingLeft: platform.width*.03,
+		right: platform.width*.13,
+	}
 });

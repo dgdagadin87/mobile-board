@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         zIndex: 1000000,
         justifyContent: 'center',
         width: '100%',
-        height: (platform.height*1.3),
+        height: platform.height,
         padding: 10,
         backgroundColor: '#ffffff',
         opacity: .9,

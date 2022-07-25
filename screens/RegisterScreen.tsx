@@ -51,6 +51,9 @@ class RegisterScreen extends React.Component<Props, any> {
 		this.changePassword = this.changePassword.bind(this);
 		this.changeName = this.changeName.bind(this);
 		this.changeMail = this.changeMail.bind(this);
+		this.clearLogin = this.clearLogin.bind(this);
+		this.clearName = this.clearName.bind(this);
+		this.clearMail = this.clearMail.bind(this);
 	}
 
 	public get isButtonDisabled(): boolean {
@@ -60,6 +63,18 @@ class RegisterScreen extends React.Component<Props, any> {
 		}
 
 		return false;
+	}
+
+	clearLogin() {
+		this.setState({ error: '' }, () => this.props.actions.changeLogin(''));
+	}
+
+	clearName() {
+		this.setState({ error: '' }, () => this.props.actions.changeName(''));
+	}
+
+	clearMail() {
+		this.setState({ error: '' }, () => this.props.actions.changeMail(''));
 	}
 
 	changeLogin(text: string) {
@@ -102,8 +117,8 @@ class RegisterScreen extends React.Component<Props, any> {
 			this.setState({ isLoading: false });
 			this.alert.alert('Успех', 'Вы успешно зарегистрировались в системе');
 		}
-		catch(err: any) {
-			const errorResponse: any = err.response || {};
+		catch(err) {
+			const errorResponse: any = (err as any).response || {};
 			const errorData: any = errorResponse.data || {};
 			const errorText: string = errorData.detail || '';
 			this.setState({ isLoading: false, error: errorText });
@@ -139,6 +154,7 @@ class RegisterScreen extends React.Component<Props, any> {
 						isPassword={false}
 						value={name}
 						onChangeValue={this.changeName}
+						onClearText={this.clearName}
 					/>
 					<CustomTextInput
 						labelText="Введите свою электронную почту"
@@ -146,6 +162,7 @@ class RegisterScreen extends React.Component<Props, any> {
 						isPassword={false}
 						value={mail}
 						onChangeValue={this.changeMail}
+						onClearText={this.clearMail}
 					/>
 					<CustomTextInput
 						labelText="Придумайте имя пользователя"
@@ -153,6 +170,7 @@ class RegisterScreen extends React.Component<Props, any> {
 						isPassword={false}
 						value={login}
 						onChangeValue={this.changeLogin}
+						onClearText={this.clearLogin}
 					/>
 					<CustomTextInput
 						labelText="Придумайте пароль"

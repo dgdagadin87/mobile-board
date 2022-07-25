@@ -39,6 +39,7 @@ class LoginScreen extends React.Component<Props, any> {
 		this.onLogin = this.onLogin.bind(this);
 		this.changeLogin = this.changeLogin.bind(this);
 		this.changePassword = this.changePassword.bind(this);
+		this.onClearLogin = this.onClearLogin.bind(this);
 	}
 
 	public get isButtonDisabled(): boolean {
@@ -56,6 +57,10 @@ class LoginScreen extends React.Component<Props, any> {
 
 	changePassword(text: string) {
 		this.setState({ error: '' }, () => this.props.actions.changePassword(text));
+	}
+
+	onClearLogin() {
+		this.setState({ error: '' }, () => this.props.actions.changeLogin(''));
 	}
 
 	async onLogin(): Promise<void> {
@@ -105,6 +110,7 @@ class LoginScreen extends React.Component<Props, any> {
 						isPassword={false}
 						value={login}
 						onChangeValue={this.changeLogin}
+						onClearText={this.onClearLogin}
 					/>
 					<CustomTextInput
 						labelText="Введите пароль"
