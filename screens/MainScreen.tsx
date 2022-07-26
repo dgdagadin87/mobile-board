@@ -135,6 +135,7 @@ class MainScreen extends React.Component<any, any> {
 		this.onEditClick = this.onEditClick.bind(this);
 		this.onNewVideoClick = this.onNewVideoClick.bind(this);
 		this.onHelpClick = this.onHelpClick.bind(this);
+		this.onExitClick = this.onExitClick.bind(this);
 		this.onAddFromGalleryClick = this.onAddFromGalleryClick.bind(this);
 		this.onShowDescription = this.onShowDescription.bind(this);
 	}
@@ -150,9 +151,12 @@ class MainScreen extends React.Component<any, any> {
 	}
 
 	async onHelpClick() {
+		this.alert.alert('Помощь', 'Это кнопка помощи');
+	}
+
+	async onExitClick() {
 		await this.auth.exit();
 		this.props.navigation.navigate('Login');
-		//this.alert.alert('Помощь', 'Это кнопка помощи');
 	}
 
 	async onAddFromGalleryClick() {
@@ -291,6 +295,7 @@ class MainScreen extends React.Component<any, any> {
 						style={styles.helpIcon}
 					/>
 					<Text onPress={this.onHelpClick} style={styles.helpText}>Помощь</Text>
+					<Text onPress={this.onExitClick} style={styles.logoutText}>Выйти</Text>
 					<Text onPress={this.onAddFromGalleryClick} style={styles.galleryText}>Добавить из галереи</Text>
 
 					<View style={styles.newVideoBlock}>
@@ -378,6 +383,16 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		textDecorationLine: 'underline',
 		color: 'white',
+		zIndex: 999,
+	},
+	logoutText: {
+		position: 'absolute',
+		top: 175,
+		right: 50,
+		fontSize: 15,
+		textDecorationLine: 'underline',
+		color: 'white',
+		zIndex: 999,
 	},
 	galleryText: {
 		position: 'absolute',
