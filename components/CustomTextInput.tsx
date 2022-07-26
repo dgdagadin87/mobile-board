@@ -17,6 +17,7 @@ export type CustomTextInputProps = {
 	numOfStrings?: number,
 	customLabelStyles?: { [key: string]: string | number },
 	customInputStyles?: { [key: string]: string | number },
+	customIconStyles?:  { [key: string]: string | number },
 };
 
 export function CustomTextInput(props: CustomTextInputProps) {
@@ -25,6 +26,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 	const {
 		customInputStyles = null,
 		customLabelStyles = null,
+		customIconStyles = null,
 		isTextarea = false,
 		numOfStrings = 1,
 		inputMask = false,
@@ -63,25 +65,32 @@ export function CustomTextInput(props: CustomTextInputProps) {
 					placeholder={props.placeholderText}
 					onChangeText={(text: string) => props.onChangeValue(text)}
 				/>
+				{props.onClearText && !props.isPassword && !props.isTextarea ? <FontAwesome
+					name={ 'times' }
+					size={23}
+					color={ '#777' }
+					onPress={props.onClearText} 
+					style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
+				/> : null}
 			</View>
 		);
 	}
 
   	return (
   		<View style={{ backgroundColor: 'transparent' }}>
-			{props.onClearText && !props.isPassword ? <FontAwesome
+			{props.onClearText && !props.isPassword && !props.isTextarea ? <FontAwesome
 				name={ 'times' }
 				size={23}
 				color={ '#777' }
 				onPress={props.onClearText} 
-				style={styles.icon}
+				style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
 			/> : null}
 			{props.isPassword ? <FontAwesome
 				name={ isVisible ? 'eye-slash' : 'eye' }
 				size={23}
 				color={ '#777' }
 				onPress={() => {setIsVisible(!isVisible)}} 
-				style={styles.icon}
+				style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
 			/> : null}
 			{ renderLabel() }
 			<TextInput
@@ -128,5 +137,5 @@ const styles = StyleSheet.create({
 		paddingRight: platform.width*.03,
 		paddingLeft: platform.width*.03,
 		right: platform.width*.13,
-	}
+	},
 });

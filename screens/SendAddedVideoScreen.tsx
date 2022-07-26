@@ -52,6 +52,11 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         this.changeActivityType = this.changeActivityType.bind(this);
         this.sendOnModeration = this.sendOnModeration.bind(this);
         this.returnOnMain = this.returnOnMain.bind(this);
+
+        this.clearVideoName = this.clearVideoName.bind(this);
+        this.clearEfirDate = this.clearEfirDate.bind(this);
+        this.clearCountryCityFrom = this.clearCountryCityFrom.bind(this);
+        this.clearActivityType = this.clearActivityType.bind(this);
     }
 
     get fullDescription(): string {
@@ -134,6 +139,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         this.props.actions.setVideoName(text);
     }
 
+    clearVideoName() {
+        this.props.actions.setVideoName('');
+    }
+
     changeFilmName(text: string) {
         this.props.actions.setFilmName(text);
     }
@@ -142,12 +151,24 @@ class SendAddedVideoScreen extends React.Component<any, any> {
         this.props.actions.setEfirDate(text);
     }
 
+    clearEfirDate() {
+        this.props.actions.setEfirDate('');
+    }
+
     changeCountryCityFrom(text: string) {
         this.props.actions.setCountryCityFrom(text);
     }
 
+    clearCountryCityFrom() {
+        this.props.actions.setCountryCityFrom('');
+    }
+
     changeActivityType(text: string) {
         this.props.actions.setActivityType(text);
+    }
+
+    clearActivityType() {
+        this.props.actions.setActivityType('');
     }
 
     changeVideoDescription(text: string) {
@@ -189,8 +210,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     isPassword={false}
                     value={this.props.videoName}
                     onChangeValue={this.changeVideoName}
+                    onClearText={this.clearVideoName}
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
+                    customIconStyles={{ right: 0, paddingRight: this.platform.width*.005, }}
                 />
                 <CustomTextInput
                     isTextarea={true}
@@ -210,8 +233,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     isPassword={false}
                     value={this.props.efirDate}
                     onChangeValue={this.changeEfirDate}
+                    onClearText={this.clearEfirDate}
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
+                    customIconStyles={{ right: 0, paddingRight: this.platform.width*.005, }}
                 />
                 <CustomTextInput
                     isTextarea={true}
@@ -230,8 +255,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     isPassword={false}
                     value={this.props.countryCityFrom}
                     onChangeValue={this.changeCountryCityFrom}
+                    onClearText={this.clearCountryCityFrom}
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
+                    customIconStyles={{ right: 0, paddingRight: this.platform.width*.005, }}
                 />
                 <CustomTextInput
                     labelText="Укажите Ваш род деятельности"
@@ -239,8 +266,10 @@ class SendAddedVideoScreen extends React.Component<any, any> {
                     isPassword={false}
                     value={this.props.activityType}
                     onChangeValue={this.changeActivityType}
+                    onClearText={this.clearActivityType}
                     customLabelStyles={{ marginLeft: 0 }}
                     customInputStyles={{ marginLeft: 0, width: '100%' }}
+                    customIconStyles={{ right: 0, paddingRight: this.platform.width*.005, }}
                 />
 
                 <CustomButton
