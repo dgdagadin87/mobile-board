@@ -12,7 +12,7 @@ import PlatformService from '../services/platform-service';
 import AuthService from '../services/auth-service';
 import { changeLogin, changePassword } from '../redux/actions/login';
 import { Text, View } from '../components/Themed';
-import CorrectKeyboardAvoidingContainer from '../components/CorrectKeyboardAvoidingContainer';
+import CorrectKeyboardContainer from '../components/CorrectKeyboardContainer';
 import { CustomButton } from '../components/CustomButton';
 import { CustomTextInput } from '../components/CustomTextInput';
 import { CustomError } from '../components/CustomError';
@@ -165,9 +165,9 @@ class LoginScreen extends React.Component<Props, any> {
 		}
 
 		return (
-			<CorrectKeyboardAvoidingContainer>
+			<CorrectKeyboardContainer>
 				{this.renderMain()}
-			</CorrectKeyboardAvoidingContainer>
+			</CorrectKeyboardContainer>
 		);
 	}
 };
