@@ -67,7 +67,7 @@ export function CustomTextInput(props: CustomTextInputProps) {
 				/>
 				{props.onClearText && !props.isPassword && !props.isTextarea ? <FontAwesome
 					name={ 'times' }
-					size={23}
+					size={30}
 					color={ '#777' }
 					onPress={props.onClearText} 
 					style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
@@ -77,17 +77,17 @@ export function CustomTextInput(props: CustomTextInputProps) {
 	}
 
   	return (
-  		<View style={{ backgroundColor: 'transparent' }}>
+  		<View style={{ backgroundColor: 'transparent', position: 'relative' }}>
 			{props.onClearText && !props.isPassword && !props.isTextarea ? <FontAwesome
 				name={ 'times' }
-				size={23}
+				size={30}
 				color={ '#777' }
 				onPress={props.onClearText} 
 				style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
 			/> : null}
 			{props.isPassword ? <FontAwesome
 				name={ isVisible ? 'eye-slash' : 'eye' }
-				size={23}
+				size={30}
 				color={ '#777' }
 				onPress={() => {setIsVisible(!isVisible)}} 
 				style={customIconStyles ? [styles.icon, customIconStyles] : styles.icon}
@@ -131,9 +131,7 @@ const styles = StyleSheet.create({
 	icon: {
 		zIndex: 1000,
 		position: 'absolute',
-		top: 20,
-		paddingTop: 5,
-		paddingBottom: 5,
+		top: '38%',
 		paddingRight: platform.width*.03,
 		paddingLeft: platform.width*.03,
 		right: platform.width*.13,

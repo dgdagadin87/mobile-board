@@ -110,6 +110,7 @@ class NewVideoScreen extends React.Component<any, any> {
 	}
 
 	async onChangeOrientationListener(event: any = {}) {
+		console.log(1111111111111111111111111111111111111111111)
 		const OrientationContainer = ScreenOrientation.Orientation;
 		let orientation: number = 0;
 		if (!!event) {
